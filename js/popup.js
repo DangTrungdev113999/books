@@ -141,8 +141,11 @@ function hideTooltip() { $('#tooltip').classList.remove('show'); }
 
 function setupFeedback() {
   const fb = $('#feedback');
-  if (!isFeedbackEnabled()) { fb.classList.add('hidden'); return; }
+  // Luôn hiện ô góp ý — kể cả khi chưa cấu hình worker (để gõ/đọc thử ngay).
+  // Khi đã có WORKER_URL → gửi Telegram thật; chưa có → báo nhẹ nhàng.
   fb.classList.remove('hidden');
+  const enabled = isFeedbackEnabled();
+  $('#fb-note').classList.toggle('hidden', enabled);
 
   const nameEl = $('#fb-name');
   const commentEl = $('#fb-comment');
@@ -174,6 +177,7 @@ function setupFeedback() {
 
     sendBtn.disabled = false;
     if (res.ok) { setStatus(status, 'ok', '✓ Đã gửi! Cảm ơn bạn.'); commentEl.value = ''; }
+    else if (res.error === 'disabled') setStatus(status, '', '⚙️ Tính năng gửi Telegram sẽ bật sau khi cấu hình worker.');
     else if (res.error === 'rate_limited') setStatus(status, 'err', `Bạn gửi hơi nhiều — thử lại sau ${Math.ceil((res.retry_after || 0) / 60)} phút`);
     else setStatus(status, 'err', res.message || 'Gửi thất bại, thử lại sau');
   };

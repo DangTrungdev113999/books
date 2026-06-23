@@ -74,12 +74,12 @@ button { font-family: inherit; cursor: pointer; }
 .toc-group { margin-top: 16px; }
 .toc-group:first-child { margin-top: 6px; }
 .toc-group-title {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: hsl(var(--fg-3));
-  padding: 6px 12px 4px;
+  color: hsl(var(--fg-2));
+  padding: 8px 12px 5px;
 }
 
 .toc-item {
@@ -155,12 +155,25 @@ button { font-family: inherit; cursor: pointer; }
 
 #map { width: 100%; height: 100%; display: block; }
 
-/* markmap: ÉP chữ node tương phản cao trên mọi theme; nhánh giữ màu sắc */
+/* markmap: ÉP chữ node tương phản cao trên mọi theme; nhánh giữ màu sắc.
+   Halo theo nền (--bg-0) → chữ LUÔN tách khỏi đường nhánh & nền, kể cả khi
+   nhánh màu chạy sát chân chữ → đọc rõ trên mọi theme. */
 #map .markmap-foreign,
 #map .markmap-foreign div {
   color: hsl(var(--fg-0)) !important;
   font-family: var(--font-sans);
   font-weight: 500;
+  text-shadow:
+    0 0 6px hsl(var(--bg-0)), 0 0 4px hsl(var(--bg-0)),
+    0 0 2px hsl(var(--bg-0)), 0 1px 1px hsl(var(--bg-0));
+}
+/* Tên sách (gốc, depth 1) — to & đậm nhất */
+#map g.markmap-node[data-depth='1'] .markmap-foreign div {
+  font-weight: 800; font-size: 1.12em; letter-spacing: -0.01em;
+}
+/* Phần / nhóm (depth 2) — header phân cấp, đậm & rõ */
+#map g.markmap-node[data-depth='2'] .markmap-foreign div {
+  font-weight: 800; font-size: 1.04em;
 }
 #map .markmap-foreign a,
 #map .markmap-foreign a:visited {
@@ -460,6 +473,7 @@ button { font-family: inherit; cursor: pointer; }
 #feedback { padding: 6px 24px 22px; }
 #feedback h4 { margin: 8px 0 4px; font-size: 15px; font-weight: 700; color: hsl(var(--fg-0)); }
 #feedback .hint { font-size: 12.5px; color: hsl(var(--fg-2)); margin: 0 0 12px; }
+#feedback .fb-note { color: hsl(var(--warn)); margin: -6px 0 12px; }
 #feedback .row { margin-bottom: 10px; }
 #feedback input, #feedback textarea {
   width: 100%; font-family: inherit; font-size: 14px;

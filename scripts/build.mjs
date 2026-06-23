@@ -39,9 +39,11 @@ function parseDoc(text) {
   // 1. Bỏ breadcrumb dòng đầu (in nghiêng, bắt đầu bằng *[)
   if (lines.length && /^\*\[/.test(lines[0].trim())) lines.shift();
 
-  // 2. Cắt footer điều hướng: từ dòng `---` đứng ngay trước dòng chứa ⬅
+  // 2. Cắt footer điều hướng: từ dòng `---` ngay trước dòng chứa mũi tên nav
+  //    (⬅ trước / ⬆ mục lục / ➡ tiếp) — file đầu/cuối có thể thiếu một hướng.
+  const NAV = /[⬅⬆➡]/;
   for (let i = lines.length - 1; i >= 0; i--) {
-    if (lines[i].includes('⬅')) {
+    if (NAV.test(lines[i]) && /\]\(.*\.md\)/.test(lines[i])) {
       let cut = i;
       // lùi qua các dòng trống tới dòng `---`
       let j = i - 1;

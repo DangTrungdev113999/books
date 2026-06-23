@@ -63,7 +63,7 @@ export const isRead = (id) => Boolean(state.read[id]);
 export function markRead(id, meta = {}) {
   if (state.read[id]) return false;          // chỉ ghi lần đầu
   state.read[id] = now();
-  pushHistory({ type: 'read', id, lang: meta.lang, preview: meta.title || '' }, false);
+  // KHÔNG ghi "đã đọc" vào lịch sử — chỉ log thao tác tô đậm / ghi chú.
   save({ kind: 'read', id });
   return true;
 }

@@ -356,9 +356,9 @@ function initResume() {
 
 function renderHistory() {
   const list = $('#history-list');
-  const items = getHistory();
+  const items = getHistory().filter((h) => h.type !== 'read'); // bỏ "đã đọc" — chỉ hiện tô đậm / ghi chú
   if (!items.length) {
-    list.innerHTML = '<div class="hp-empty">Chưa có hoạt động nào.<br/>Mở một mục để bắt đầu hành trình đọc.</div>';
+    list.innerHTML = '<div class="hp-empty">Chưa có ghi chú nào.<br/>Bôi đậm một đoạn hoặc thêm ghi chú để lưu lại đây.</div>';
     return;
   }
   list.innerHTML = items.map((h) => `

@@ -258,7 +258,8 @@ export function setupHighlighter(getCtx) {
   body.addEventListener('scroll', () => { hideToolbar(); if (!$('#hl-popover').classList.contains('hidden')) closePopover(); }, { passive: true });
   document.addEventListener('mousedown', (e) => {
     if (!e.target.closest('#hl-toolbar') && !e.target.closest('mark.hl')) hideToolbar();
-    if (!e.target.closest('#hl-popover') && !e.target.closest('mark.hl')) {
+    // KHÔNG đóng popover khi bấm trong thanh nổi (nút "Ghi chú" vừa MỞ popover) hay trên đoạn tô
+    if (!e.target.closest('#hl-popover') && !e.target.closest('mark.hl') && !e.target.closest('#hl-toolbar')) {
       if (!$('#hl-popover').classList.contains('hidden')) closePopover();
     }
   });

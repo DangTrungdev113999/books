@@ -610,51 +610,50 @@ button { font-family: inherit; cursor: pointer; }
 .ptext b { color: hsl(var(--fg-0)); }
 .ptext .sep { color: hsl(var(--fg-3)); margin: 0 1px; }
 
-/* — thẻ "Tiếp tục đọc" — */
+/* — thẻ "Tiếp tục đọc" — gọn, nằm sát mép trên (trong dải topbar) — */
 #resume-card {
-  position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
-  z-index: 6;
-  display: flex; align-items: center; gap: 13px;
-  max-width: min(540px, calc(100% - 40px));
-  padding: 10px 12px 10px 13px;
-  border-radius: 15px;
-  background: hsl(var(--bg-1) / 0.94);
-  border: 1px solid hsl(var(--brand) / 0.42);
-  box-shadow: var(--shadow-lg), 0 0 0 4px hsl(var(--brand) / 0.06);
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 7;
+  display: flex; align-items: center; gap: 9px;
+  max-width: min(440px, calc(100% - 360px));
+  padding: 4px 5px 4px 8px;
+  border-radius: 11px;
+  background: hsl(var(--bg-1) / 0.95);
+  border: 1px solid hsl(var(--brand) / 0.4);
+  box-shadow: var(--shadow-lg);
   backdrop-filter: blur(10px);
-  animation: resumeIn 0.42s var(--ease-out-expo, cubic-bezier(0.22,1,0.36,1));
+  animation: resumeIn 0.4s var(--ease-out-expo, cubic-bezier(0.22,1,0.36,1));
 }
-@keyframes resumeIn { from { opacity: 0; transform: translate(-50%, -12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes resumeIn { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
 .rc-glyph {
-  flex-shrink: 0; width: 38px; height: 38px; border-radius: 11px;
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 8px;
   display: inline-flex; align-items: center; justify-content: center;
   color: hsl(var(--brand));
   background: hsl(var(--brand) / 0.12);
   border: 1px solid hsl(var(--brand) / 0.25);
 }
-.rc-glyph svg { width: 19px; height: 19px; }
-.rc-text { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
-.rc-kicker { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: hsl(var(--brand)); }
+.rc-glyph svg { width: 15px; height: 15px; }
+.rc-text { display: flex; align-items: baseline; min-width: 0; gap: 7px; }
+.rc-kicker { font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: hsl(var(--brand)); flex-shrink: 0; }
 .rc-title {
-  font-family: var(--font-serif); font-size: 15.5px; font-weight: 600;
-  color: hsl(var(--fg-0)); line-height: 1.25;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px;
+  font-family: var(--font-serif); font-size: 13.5px; font-weight: 600;
+  color: hsl(var(--fg-0)); line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 210px;
 }
 .rc-go {
-  flex-shrink: 0; margin-left: 4px;
-  display: inline-flex; align-items: center; gap: 6px;
-  height: 36px; padding: 0 15px; border-radius: 10px; border: none;
+  flex-shrink: 0; margin-left: 3px;
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 30px; padding: 0 12px; border-radius: 8px; border: none;
   background: hsl(var(--brand)); color: hsl(var(--brand-fg));
-  font-size: 13px; font-weight: 700;
-  box-shadow: 0 1px 2px hsl(var(--bg-0) / 0.4);
-  transition: background 0.13s, transform 0.08s, box-shadow 0.13s;
+  font-size: 12.5px; font-weight: 700;
+  transition: background 0.13s, transform 0.08s;
 }
-.rc-go svg { width: 15px; height: 15px; }
-.rc-go:hover { background: hsl(var(--brand-hot)); box-shadow: 0 3px 12px -3px hsl(var(--brand) / 0.6); }
+.rc-go svg { width: 13px; height: 13px; }
+.rc-go:hover { background: hsl(var(--brand-hot)); }
 .rc-go:active { transform: translateY(1px); }
 .rc-dismiss {
   flex-shrink: 0; border: none; background: transparent; color: hsl(var(--fg-3));
-  width: 28px; height: 28px; border-radius: 8px; font-size: 19px; line-height: 1;
+  width: 24px; height: 24px; border-radius: 7px; font-size: 17px; line-height: 1;
   display: inline-flex; align-items: center; justify-content: center;
   transition: background 0.12s, color 0.12s;
 }
@@ -671,24 +670,11 @@ button { font-family: inherit; cursor: pointer; }
 .toc-item .tick svg { width: 15px; height: 15px; }
 .toc-item.is-done .tick { opacity: 1; transform: scale(1); }
 .toc-item.is-done .kind { display: none; }       /* đã đọc xong → ✓ thay cho icon kind */
-.toc-item.is-done .label { color: hsl(var(--fg-2)); }
-.toc-item.is-done:hover .label { color: hsl(var(--fg-0)); }
+/* KHÔNG làm mờ chữ mục đã đọc — chỉ dùng dấu ✓ để báo trạng thái, tránh trông như bị disable */
 .toc-item.is-partial .no { color: hsl(var(--brand)); font-weight: 800; }
-.toc-item.is-current {
-  background: hsl(var(--brand) / 0.08);
-}
-.toc-item.is-current .label { color: hsl(var(--fg-0)); font-weight: 600; }
-.toc-item.is-current::before {
-  content: ''; position: absolute; left: 0; top: 7px; bottom: 7px; width: 3px;
-  border-radius: 0 3px 3px 0; background: hsl(var(--brand));
-}
+/* is-current sidebar KHÔNG tô nền/thanh nữa — tránh "2 cái active"; chỉ .active (mục đang chọn) được tô */
 
 /* — mindmap: lá đã đọc / đang đọc dở — */
-#map .markmap-foreign a.is-read,
-#map .markmap-foreign a.is-read:visited {
-  color: hsl(var(--fg-3)) !important;
-  border-bottom-color: hsl(var(--fg-4) / 0.4);
-}
 #map .markmap-foreign a.is-read::after {
   content: ' ✓'; color: hsl(var(--done)); font-weight: 800;
   -webkit-text-stroke: 0.3px hsl(var(--done));

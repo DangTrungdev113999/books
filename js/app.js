@@ -415,7 +415,7 @@ async function boot() {
 
   $('#brand-title').textContent = book.meta.titleVi;
   $('#brand-by').textContent = `${book.meta.author} · ${book.meta.title}`;
-  $('#map-title').innerHTML = `<b>${book.meta.titleVi}</b> — ${book.meta.sectionCount} mục`;
+  // (đã bỏ tiêu đề lặp "… — N mục" trên topbar — tên sách đã có ở sidebar)
 
   initState(book.meta.id, book.meta.sectionCount);
   setBook(book);

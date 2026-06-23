@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "PlayStation" theme
+ *
+ *   Aesthetic: Gaming console — three-surface black/white/charcoal channel
+ *   with PlayStation Blue primary and cyan hover glow. SST-style type, pill
+ *   CTAs, hover-scale interaction language.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="playstation"] {
+  /* ─── SURFACES — console black ramp ─────────────────────────────────────── */
+  --bg-0: 0 0% 0%;           /* #000000 Console Black page */
+  --bg-1: 0 0% 7%;           /* #121212 card */
+  --bg-2: 0 0% 12%;          /* #1f1f1f Deep Charcoal elevated */
+  --bg-3: 0 0% 17%;          /* chip */
+
+  /* ─── FOREGROUNDS — white → gray ramp ───────────────────────────────────── */
+  --fg-0: 0 0% 100%;         /* #ffffff Inverse White */
+  --fg-1: 0 0% 92%;          /* body */
+  --fg-2: 0 0% 68%;          /* secondary */
+  --fg-3: 0 0% 48%;          /* muted */
+  --fg-4: 0 0% 30%;          /* border */
+
+  /* ─── BRAND — PlayStation Blue ──────────────────────────────────────────── */
+  --brand: 205 100% 40%;     /* #0070cc PlayStation Blue */
+  --brand-hot: 191 75% 49%;  /* #1eaedb Cyan hover */
+  --brand-dim: 205 100% 40%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 14 100% 42%;        /* #d53b00 Commerce Orange */
+  --warn: 34 100% 50%;
+  --done: 154 58% 45%;
+
+  --focus-ring: 191 75% 49%;
+
+  /* ─── SHADOWS — cyan hover glow ─────────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.08);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 5px 9px rgb(0 0 0 / 0.5);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.1),
+    0 16px 32px -8px rgb(0 0 0 / 0.65);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand)),
+    0 0 28px -4px hsl(var(--brand-hot) / 0.5);
+
+  /* ─── FONTS — SST with system fallback ──────────────────────────────────── */
+  --font-sans:
+    'SST', 'Helvetica Now Display', 'Inter Variable', Inter, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 0 0% 28%;
+  --ring: var(--brand);
+  --radius: 9999px;          /* pill-first */
+}

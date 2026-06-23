@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Sentry" theme
+ *
+ *   Aesthetic: Error monitoring — deep purple canvas (#1f1633) with lavender
+ *   secondary (#6a5fc1), lime highlight (#c2ef4e) and coral focus (#ffb287).
+ *   Glass panels, uppercase labels.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="sentry"] {
+  /* ─── SURFACES — deep purple ramp ───────────────────────────────────────── */
+  --bg-0: 257 36% 15%;       /* #1f1633 primary dark purple */
+  --bg-1: 257 37% 10%;       /* #150f23 deeper card */
+  --bg-2: 253 33% 26%;       /* #362d59 border-dark surface */
+  --bg-3: 256 18% 46%;       /* #79628c button surface */
+
+  /* ─── FOREGROUNDS — white → lavender ramp ───────────────────────────────── */
+  --fg-0: 0 0% 100%;         /* #ffffff */
+  --fg-1: 220 13% 91%;       /* #e5e7eb */
+  --fg-2: 240 11% 83%;       /* #cfcfdb */
+  --fg-3: 256 18% 54%;       /* dimmed lavender */
+  --fg-4: 253 30% 36%;       /* border */
+
+  /* ─── BRAND — lavender interactive ──────────────────────────────────────── */
+  --brand: 248 44% 56%;      /* #6a5fc1 links/hover */
+  --brand-hot: 70 85% 62%;   /* #c2ef4e lime highlight */
+  --brand-dim: 248 44% 56%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 55%;
+  --warn: 22 100% 76%;       /* #ffb287 coral focus */
+  --done: 70 85% 62%;
+
+  --focus-ring: 22 100% 76%;
+
+  /* ─── SHADOWS — rich purple lift ────────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.06);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 2px 8px rgb(0 0 0 / 0.4);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 8px 24px rgb(0 0 0 / 0.18);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.45),
+    0 0 24px -4px hsl(var(--brand) / 0.5);
+
+  /* ─── FONTS — Rubik primary, Dammit Sans display ────────────────────────── */
+  --font-sans:
+    'Rubik', 'Inter Variable', Inter, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 253 20% 32%;
+  --ring: var(--brand);
+  --radius: 0.75rem;
+}

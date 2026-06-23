@@ -1,0 +1,76 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Mintlify" theme
+ *
+ *   Aesthetic: Documentation — clean white canvas with subtle green accent
+ *   (#18E299). Reading-optimized typography, whisper shadows, pill badges.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="mintlify"] {
+  /* ─── SURFACES — white ramp ─────────────────────────────────────────────── */
+  --bg-0: 0 0% 100%;         /* #ffffff page */
+  --bg-1: 0 0% 100%;         /* #ffffff card */
+  --bg-2: 0 0% 98%;          /* off white */
+  --bg-3: 0 0% 95%;          /* chip */
+
+  /* ─── FOREGROUNDS — near black → gray ramp ──────────────────────────────── */
+  --fg-0: 0 0% 5%;           /* #0d0d0d Near Black */
+  --fg-1: 0 0% 20%;          /* #333333 Gray 700 body */
+  --fg-2: 0 0% 40%;          /* #666666 secondary */
+  --fg-3: 0 0% 60%;          /* muted */
+  --fg-4: 0 0% 92%;          /* rgba(0,0,0,0.08) equivalent border */
+
+  /* ─── BRAND — Mint Green ────────────────────────────────────────────────── */
+  --brand: 157 78% 49%;      /* #18E299 Brand Green */
+  --brand-hot: 157 85% 55%;
+  --brand-dim: 157 78% 49%;
+  --brand-fg: 0 0% 5%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 50%;
+  --warn: 34 100% 45%;
+  --done: 157 78% 42%;       /* #0fa76e hover green */
+
+  --focus-ring: 157 78% 49%;
+
+  /* ─── SHADOWS — whisper soft ────────────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(0 0 0 / 0.05);
+  --shadow-md:
+    0 0 0 1px rgb(0 0 0 / 0.05),
+    0 2px 4px rgb(0 0 0 / 0.03);
+  --shadow-lg:
+    0 0 0 1px rgb(0 0 0 / 0.05),
+    0 12px 28px -6px rgb(0 0 0 / 0.08);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.35),
+    0 0 22px -4px hsl(var(--brand) / 0.35);
+
+  /* ─── FONTS — Inter primary ─────────────────────────────────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 1rem;
+}

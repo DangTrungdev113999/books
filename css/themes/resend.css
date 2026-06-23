@@ -1,0 +1,78 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Resend" theme
+ *
+ *   Aesthetic: Email API — minimal void-black canvas, near-white primary
+ *   text, frost borders (translucent blue-white), monospace accents. Orange,
+ *   green, blue accent spots for code highlights.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="resend"] {
+  /* ─── SURFACES — void black ramp ────────────────────────────────────────── */
+  --bg-0: 0 0% 0%;           /* #000000 Void Black page */
+  --bg-1: 0 0% 4%;           /* card */
+  --bg-2: 0 0% 8%;           /* elevated */
+  --bg-3: 0 0% 13%;          /* chip */
+
+  /* ─── FOREGROUNDS — near white → silver ramp ────────────────────────────── */
+  --fg-0: 0 0% 94%;          /* #f0f0f0 Near White */
+  --fg-1: 0 0% 88%;          /* body */
+  --fg-2: 204 3% 64%;        /* #a1a4a5 Silver */
+  --fg-3: 210 3% 42%;        /* muted */
+  --fg-4: 210 77% 92%;       /* frost border — rgba(214,235,253,0.19) solidified */
+
+  /* ─── BRAND — monochrome white primary with orange signal ──────────────── */
+  --brand: 0 0% 100%;        /* #ffffff — minimal primary */
+  --brand-hot: 24 100% 56%;  /* #ff801f orange accent */
+  --brand-dim: 0 0% 100%;
+  --brand-fg: 0 0% 0%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 55%;
+  --warn: 49 100% 62%;       /* #ffc53d yellow */
+  --done: 152 100% 53%;      /* #11ff99 green */
+
+  --focus-ring: 210 100% 62%; /* #3b9eff blue */
+
+  /* ─── SHADOWS — frost ring ──────────────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(214 235 253 / 0.19);
+  --shadow-md:
+    0 0 0 1px rgb(214 235 253 / 0.19),
+    0 2px 8px rgb(0 0 0 / 0.5);
+  --shadow-lg:
+    0 0 0 1px rgb(214 235 253 / 0.22),
+    0 16px 32px -8px rgb(0 0 0 / 0.6);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand-hot) / 0.5),
+    0 0 22px -4px hsl(var(--brand-hot) / 0.4);
+
+  /* ─── FONTS — ABC Favorit → Inter fallback, Commit Mono for code ────────── */
+  --font-sans:
+    'ABC Favorit', 'Inter Variable', Inter, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: 'Domaine Display', Georgia, serif;
+  --font-mono:
+    'Commit Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: 0 0% 18%;
+  --input: 0 0% 28%;
+  --ring: var(--brand);
+  --radius: 9999px;
+}

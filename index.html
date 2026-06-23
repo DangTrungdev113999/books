@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi" data-theme="salon">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nguyên lý Kim tự tháp — Sơ đồ tư duy</title>
+  <meta name="description" content="Sơ đồ hoá nội dung sách The Pyramid Principle (Barbara Minto) — đọc bản tiếng Việt theo từng nhánh." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+
+  <!-- Theme tokens (Stream Intelligent) + app styles -->
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/app.css" />
+
+  <!-- Mindmap + markdown libs (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+
+  <!-- App config (WORKER_URL điền sau khi deploy Cloudflare Worker) -->
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <div id="brand">
+        <div class="kicker">Sơ đồ tư duy</div>
+        <h1 id="brand-title">Nguyên lý Kim tự tháp</h1>
+        <div class="by" id="brand-by">Barbara Minto · The Pyramid Principle</div>
+      </div>
+      <nav id="toc"></nav>
+    </aside>
+
+    <main id="main">
+      <div id="topbar">
+        <div id="map-title"></div>
+        <button class="icon-btn" id="theme-btn" aria-haspopup="true">
+          <span class="swatch" id="theme-swatch"></span>
+          <span id="theme-label">Salon</span>
+        </button>
+      </div>
+      <div id="theme-menu"></div>
+      <svg id="map"></svg>
+      <div id="hint-bar">Click vào một nhánh để đọc · cuộn để zoom · kéo để di chuyển</div>
+    </main>
+  </div>
+
+  <!-- Popup -->
+  <div id="overlay">
+    <div id="modal" role="dialog" aria-modal="true">
+      <header id="modal-head">
+        <div>
+          <div class="crumb" id="modal-crumb"></div>
+          <h2 id="modal-title"></h2>
+        </div>
+        <div class="spacer"></div>
+        <div class="lang-toggle" id="lang-toggle">
+          <button data-lang="vi" class="active">Tiếng Việt</button>
+          <button data-lang="en">English</button>
+        </div>
+        <button id="modal-close" aria-label="Đóng">&times;</button>
+      </header>
+      <div id="modal-body"></div>
+      <section id="feedback">
+        <h4>✍️ Bạn học được gì từ phần này?</h4>
+        <p class="hint">Ghi lại 1–2 điều bạn rút ra. Gửi đi sẽ được chia sẻ với nhóm học tập trên Telegram.</p>
+        <div class="row">
+          <input id="fb-name" type="text" placeholder="Tên của bạn" maxlength="50" />
+        </div>
+        <div class="row">
+          <textarea id="fb-comment" placeholder="Mình học được rằng…" maxlength="1000"></textarea>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" id="fb-send">Gửi</button>
+          <span class="status" id="fb-status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

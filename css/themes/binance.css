@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Binance" theme
+ *
+ *   Aesthetic: Crypto exchange — bold yellow accent (#F0B90B) on monochrome.
+ *   Trading floor energy with crypto green/red signalling. Dark-first with
+ *   light-mode surfaces for informational panels.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="binance"] {
+  /* ─── SURFACES — binance dark ramp ──────────────────────────────────────── */
+  --bg-0: 240 6% 14%;        /* #222126 Binance Dark — page canvas */
+  --bg-1: 240 6% 11%;        /* #1b1b20 card */
+  --bg-2: 240 6% 18%;        /* #2b2a30 elevated */
+  --bg-3: 240 6% 22%;        /* #363540 chip */
+
+  /* ─── FOREGROUNDS — ink → slate ramp ────────────────────────────────────── */
+  --fg-0: 0 0% 98%;          /* #fafafa off-white */
+  --fg-1: 210 5% 88%;        /* near white secondary */
+  --fg-2: 212 10% 56%;       /* #848E9C Slate */
+  --fg-3: 210 6% 42%;        /* #666d75 */
+  --fg-4: 240 6% 34%;        /* subtle border */
+
+  /* ─── BRAND — Binance Yellow ────────────────────────────────────────────── */
+  --brand: 44 93% 49%;       /* #F0B90B Binance Yellow */
+  --brand-hot: 49 100% 50%;  /* #FFD000 Binance Gold */
+  --brand-dim: 44 93% 49%;
+  --brand-fg: 228 13% 13%;   /* #1E2026 Ink */
+
+  /* ─── SEMANTIC — crypto signals ─────────────────────────────────────────── */
+  --rec: 352 91% 62%;        /* #F6465D Crypto Red */
+  --warn: 44 93% 49%;
+  --done: 154 89% 42%;       /* #0ECB81 Crypto Green */
+
+  --focus-ring: 44 93% 49%;
+
+  /* ─── SHADOWS — inset ring on dark ──────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.06);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 2px 8px rgb(0 0 0 / 0.4);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 16px 32px -8px rgb(0 0 0 / 0.55);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.35),
+    0 0 24px -4px hsl(var(--brand) / 0.45);
+
+  /* ─── FONTS — system sans (BinancePlex substitute) ──────────────────────── */
+  --font-sans:
+    'BinancePlex', 'Inter Variable', Inter, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 240 5% 30%;       /* lifted so edges read on dark */
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

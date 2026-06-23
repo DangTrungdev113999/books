@@ -1,0 +1,101 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Anthropic Salon" (default theme)
+ *
+ *   Aesthetic: Anthropic/Claude parchment canvas — warm neutrals, terracotta
+ *   accent, serif headlines. Every gray has a yellow-brown undertone; there
+ *   are no cool blue-grays anywhere. Depth comes from warm-toned ring
+ *   shadows rather than drop shadows. Editorial pacing with generous
+ *   line-height (1.60) for body text.
+ *
+ *   Philosophy: literary salon over control room, warm parchment over near
+ *   black, serif gravitas over sans utility, single brand moment (terracotta)
+ *   over scattered colour. Inspired by Anthropic's product pages.
+ *
+ *   Values are HSL triplets (for `hsl(var(--token))`) mapped from Anthropic's
+ *   hex palette.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="salon"] {
+  /* ─── SURFACES — warm parchment → sand → cream ramp ─────────────────────── */
+  /* bg-0 is the page canvas (Parchment #f5f4ed); cards + elevated panes step
+   * lighter (Ivory) and button/pill surfaces step heavier (Warm Sand). */
+  --bg-0: 54 29% 94%;        /* #f5f4ed Parchment — page canvas */
+  --bg-1: 48 29% 97%;        /* #faf9f5 Ivory — card, sidebar, elevated */
+  --bg-2: 48 19% 92%;        /* #f0eee6 Border Cream — hover, tab-rest */
+  --bg-3: 48 17% 88%;        /* #e8e6dc Warm Sand — button bg, pill, chip */
+
+  /* ─── FOREGROUNDS — warm charcoal ramp ──────────────────────────────────── */
+  /* fg-0 is Near Black (#141413) for primary headlines on parchment; each
+   * step below adds warm desaturation so hierarchy reads instantly. fg-4 is
+   * the hairline divider tone (Ring Deep). */
+  --fg-0: 60 3% 8%;          /* #141413 Near Black — primary headings */
+  --fg-1: 60 2% 22%;         /* #38383534 Dark Warm — emphasized body, links */
+  --fg-2: 48 4% 32%;         /* #534f47 Olive Gray — standard body, nav */
+  --fg-3: 53 5% 44%;         /* #75736b Stone Gray — tertiary, metadata, kbd */
+  --fg-4: 48 8% 73%;         /* #c2c0b6 Ring Deep — hairline borders */
+
+  /* ─── BRAND — terracotta earth tone, used sparingly ─────────────────────── */
+  /* The only chromatic colour in the system. Reserved for primary CTAs and
+   * high-signal brand moments (active nav indicator, "recording" dot). */
+  --brand: 14 54% 53%;       /* #c96442 Terracotta — primary CTA */
+  --brand-hot: 15 64% 59%;   /* #d97757 Coral — hover, lighter accent */
+  --brand-dim: 14 54% 53%;   /* same hue; layered via alpha (see utilities) */
+  --brand-fg: 48 29% 97%;    /* #faf9f5 Ivory — text on solid brand fill */
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  /* All derived warm — no cool blues or greens. warn is warm amber; done is
+   * a muted moss green with yellow undertone (never sage/teal). */
+  --rec: 0 55% 46%;          /* #b53333 Error Crimson — serious, not shouting */
+  --warn: 34 100% 33%;       /* #a65e00 warm amber — in-flight / caution */
+  --done: 114 30% 37%;       /* #4a7c42 warm moss — success / complete */
+
+  /* ─── FOCUS RING (the one cool moment per DESIGN.md a11y allowance) ─────── */
+  --focus-ring: 207 81% 57%; /* #3898ec Focus Blue */
+
+  /* ─── SHADOWS — warm ring halos, whisper drop for hero lift ─────────────── */
+  --shadow-sm:
+    0 0 0 1px rgb(209 207 197 / 0.8);                   /* #d1cfc5 Ring Warm */
+  --shadow-md:
+    0 0 0 1px rgb(194 192 182 / 0.9),                   /* #c2c0b6 Ring Deep */
+    0 1px 2px 0 rgb(20 20 19 / 0.04);
+  --shadow-lg:
+    0 0 0 1px rgb(194 192 182 / 0.9),
+    0 4px 24px rgb(20 20 19 / 0.06);                    /* whisper lift */
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.35),
+    0 0 18px -4px hsl(var(--brand) / 0.25);
+
+  /* ─── FONTS — Inter + Source Serif 4 + JetBrains Mono ───────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman',
+    ui-serif, serif;
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE (points at our primary tokens) ──────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-1);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

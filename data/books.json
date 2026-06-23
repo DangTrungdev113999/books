@@ -1,0 +1,18 @@
+{
+  "books": [
+    {
+      "id": "the-pyramid-principle",
+      "title": "The Pyramid Principle",
+      "titleVi": "Nguyên lý Kim tự tháp",
+      "author": "Barbara Minto",
+      "source": ".",
+      "data": "data/the-pyramid-principle.json",
+      "groups": [
+        { "title": "Mở đầu", "files": ["01", "02"] },
+        { "title": "Phần I — Logic trong cách viết", "files": ["03", "04", "05", "06", "07", "08", "09"] },
+        { "title": "Phần II — Logic trong cách suy nghĩ", "files": ["10", "11", "12", "13", "14"] },
+        { "title": "Phụ lục & Tham khảo", "files": ["15", "16"] }
+      ]
+    }
+  ]
+}

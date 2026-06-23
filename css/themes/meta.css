@@ -1,0 +1,76 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Meta" theme
+ *
+ *   Aesthetic: Tech retail — binary white/dark canvas with Meta Blue CTAs.
+ *   Photography-first, slate gray body, subtle dividers, pill-heavy buttons.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="meta"] {
+  /* ─── SURFACES — white → soft gray ramp ─────────────────────────────────── */
+  --bg-0: 0 0% 100%;         /* #ffffff page */
+  --bg-1: 0 0% 100%;         /* #ffffff card */
+  --bg-2: 210 25% 96%;       /* #F1F4F7 Soft Gray */
+  --bg-3: 210 20% 92%;       /* tinted surface */
+
+  /* ─── FOREGROUNDS — charcoal → slate ramp ───────────────────────────────── */
+  --fg-0: 207 30% 15%;       /* #1C2B33 Dark Charcoal */
+  --fg-1: 207 24% 22%;       /* darkened body */
+  --fg-2: 209 14% 43%;       /* #5D6C7B Slate Gray */
+  --fg-3: 210 10% 60%;       /* muted */
+  --fg-4: 211 17% 89%;       /* #DEE3E9 Divider Gray */
+
+  /* ─── BRAND — Meta Blue ─────────────────────────────────────────────────── */
+  --brand: 213 100% 44%;     /* #0064E0 Meta Blue */
+  --brand-hot: 213 100% 52%;
+  --brand-dim: 213 100% 44%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 50%;
+  --warn: 34 100% 45%;
+  --done: 154 58% 40%;
+
+  --focus-ring: 213 100% 44%;
+
+  /* ─── SHADOWS — soft cinematic lift ─────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(28 43 51 / 0.08);
+  --shadow-md:
+    0 0 0 1px rgb(28 43 51 / 0.06),
+    0 4px 10px rgb(28 43 51 / 0.08);
+  --shadow-lg:
+    0 0 0 1px rgb(28 43 51 / 0.06),
+    0 12px 28px -6px rgb(28 43 51 / 0.14);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.35),
+    0 0 22px -4px hsl(var(--brand) / 0.4);
+
+  /* ─── FONTS — Optimistic with system fallback ───────────────────────────── */
+  --font-sans:
+    'Optimistic Display', 'Inter Variable', Inter, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-2);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 1rem;
+}

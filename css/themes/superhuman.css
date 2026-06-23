@@ -1,0 +1,81 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Superhuman" theme
+ *
+ *   Aesthetic: Premium email client — warm white canvas with Mysteria Purple
+ *   (#1b1938) hero sections and Lavender Glow (#cbb7fb) accent. Warm cream
+ *   button (#e9e5dd), parchment borders — keyboard-first, premium dark UI.
+ *
+ *   Judgment: spec lists "Page Background: Pure White" but dominant hero and
+ *   palette marker is Mysteria Purple. Rendering as light-mood theme with
+ *   Amethyst link (#714cb6) as primary brand token.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="superhuman"] {
+  /* ─── SURFACES — warm white ramp ────────────────────────────────────────── */
+  --bg-0: 0 0% 100%;         /* #ffffff page */
+  --bg-1: 0 0% 100%;         /* #ffffff card */
+  --bg-2: 36 19% 89%;        /* #e9e5dd Warm Cream button surface */
+  --bg-3: 26 14% 84%;        /* #dcd7d3 Parchment Border surface */
+
+  /* ─── FOREGROUNDS — charcoal ink ramp ───────────────────────────────────── */
+  --fg-0: 20 5% 15%;         /* #292827 Charcoal Ink primary */
+  --fg-1: 20 4% 25%;         /* body */
+  --fg-2: 20 4% 40%;         /* secondary */
+  --fg-3: 20 4% 58%;         /* muted */
+  --fg-4: 26 14% 84%;        /* #dcd7d3 Parchment Border */
+
+  /* ─── BRAND — Amethyst purple ───────────────────────────────────────────── */
+  --brand: 261 42% 51%;      /* #714cb6 Amethyst Link */
+  --brand-hot: 261 88% 85%;  /* #cbb7fb Lavender Glow */
+  --brand-dim: 261 42% 51%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 50%;
+  --warn: 34 100% 45%;
+  --done: 154 58% 40%;
+
+  --focus-ring: 261 42% 51%;
+
+  /* ─── SHADOWS — premium lift with purple glow ───────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(220 215 211 / 0.8);
+  --shadow-md:
+    0 0 0 1px rgb(220 215 211 / 0.9),
+    0 1px 3px rgb(41 40 39 / 0.06);
+  --shadow-lg:
+    0 0 0 1px rgb(220 215 211 / 0.9),
+    0 8px 24px rgb(41 40 39 / 0.08);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.4),
+    0 0 24px -4px hsl(var(--brand-hot) / 0.6);
+
+  /* ─── FONTS — Super Sans fallback ───────────────────────────────────────── */
+  --font-sans:
+    'Super Sans', 'Inter Variable', Inter, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-2);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

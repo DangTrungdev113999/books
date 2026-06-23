@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Linear" theme
+ *
+ *   Aesthetic: Linear app marketing — ultra-minimal near-black background
+ *   (#08090a) with indigo-violet as the only chromatic colour. Panels step up
+ *   in grayscale; every gray has a barely-there cool undertone. Depth comes
+ *   from borders + stacked shadows, not glow.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="linear"] {
+  /* ─── SURFACES — near-black to elevated gray ────────────────────────────── */
+  --bg-0: 210 10% 4%;        /* #08090a Marketing Black — page */
+  --bg-1: 220 4% 7%;         /* #0f1011 Panel Dark — card */
+  --bg-2: 220 4% 10%;        /* #191a1b Level 3 — hover */
+  --bg-3: 240 5% 16%;        /* #28282c Secondary — chip */
+
+  /* ─── FOREGROUNDS — cool silver ramp ────────────────────────────────────── */
+  --fg-0: 210 9% 97%;        /* #f7f8f8 Primary */
+  --fg-1: 218 19% 85%;       /* #d0d6e0 Secondary */
+  --fg-2: 219 6% 57%;        /* #8a8f98 Tertiary */
+  --fg-3: 219 4% 40%;        /* #62666d Quaternary */
+  --fg-4: 220 8% 28%;        /* #23252a Border Primary — hairline */
+
+  /* ─── BRAND — indigo violet ─────────────────────────────────────────────── */
+  --brand: 232 56% 60%;      /* #5e6ad2 Brand Indigo */
+  --brand-hot: 241 100% 72%; /* #7170ff Accent Violet */
+  --brand-dim: 232 56% 60%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 58%;          /* warm red */
+  --warn: 38 90% 58%;        /* amber */
+  --done: 160 84% 39%;       /* #10b981 Emerald */
+
+  --focus-ring: 241 100% 72%;
+
+  /* ─── SHADOWS — subtle ring + deep stack ────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.05);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 4px 12px rgb(0 0 0 / 0.4);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 20px 40px -12px rgb(0 0 0 / 0.6);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.5),
+    0 0 24px -4px hsl(var(--brand) / 0.55);
+
+  /* ─── FONTS — Inter with feature settings (approximation) ───────────────── */
+  --font-sans:
+    'Inter Variable', Inter, -apple-system, BlinkMacSystemFont, system-ui,
+    ui-sans-serif, 'Helvetica Neue', sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', Georgia, ui-serif, serif;
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-2);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-0);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 220 6% 24%;       /* lifted from fg-4 so input edges read on dark */
+  --ring: var(--brand-hot);
+  --radius: 0.375rem;
+}

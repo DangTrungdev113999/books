@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Raycast" theme
+ *
+ *   Aesthetic: Raycast marketing — near-black blue-tinted void (#07080a) with
+ *   macOS-precision shadows and Raycast Red (#FF6363) as punctuation. A
+ *   supporting palette of jewel-tone accents (blue, green, yellow) appears
+ *   for semantic roles. Multi-layer shadows simulate physical chrome.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="raycast"] {
+  /* ─── SURFACES — void → elevated dark ───────────────────────────────────── */
+  --bg-0: 220 14% 4%;        /* #07080a Near-Black Blue — page */
+  --bg-1: 240 2% 7%;         /* #101111 Surface 100 — card */
+  --bg-2: 220 3% 11%;        /* #1b1c1e Card Surface — hover */
+  --bg-3: 195 5% 15%;        /* ~#252829 border/elevated */
+
+  /* ─── FOREGROUNDS — near white ramp ─────────────────────────────────────── */
+  --fg-0: 240 11% 96%;       /* #f9f9f9 Near White */
+  --fg-1: 0 0% 81%;          /* #cecece Light Gray */
+  --fg-2: 0 0% 61%;           /* #9c9c9d Medium Gray */
+  --fg-3: 210 2% 42%;        /* #6a6b6c Dim Gray */
+  --fg-4: 195 6% 28%;        /* ~#252829 border */
+
+  /* ─── BRAND — Raycast Red (punctuation accent) ──────────────────────────── */
+  --brand: 0 100% 69%;       /* #FF6363 Raycast Red */
+  --brand-hot: 0 100% 75%;
+  --brand-dim: 0 100% 69%;
+  --brand-fg: 240 11% 96%;
+
+  /* ─── SEMANTIC — Raycast's jewel palette ────────────────────────────────── */
+  --rec: 0 100% 69%;         /* same as brand — Red doubles as critical */
+  --warn: 43 100% 60%;       /* #ffbc33 Raycast Yellow */
+  --done: 151 59% 59%;       /* #5fc992 Raycast Green */
+
+  --focus-ring: 202 100% 67%; /* #55b3ff Raycast Blue */
+
+  /* ─── SHADOWS — macOS chrome stack ──────────────────────────────────────── */
+  --shadow-sm:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 4px 12px rgb(0 0 0 / 0.5),
+    inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 24px 48px -12px rgb(0 0 0 / 0.7),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.45),
+    0 0 28px -4px hsl(var(--brand) / 0.5);
+
+  /* ─── FONTS — Inter, SF Mono for keys ───────────────────────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    system-ui, ui-sans-serif, 'Helvetica Neue', sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', Georgia, ui-serif, serif;
+  --font-mono:
+    'SF Mono', 'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace,
+    SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-2);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-0);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 195 5% 24%;       /* lifted from fg-4 so input edges read on dark */
+  --ring: var(--focus-ring);
+  --radius: 0.5rem;
+}

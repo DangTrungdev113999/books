@@ -1,0 +1,78 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Tesla" theme
+ *
+ *   Aesthetic: Radical subtraction — pure white canvas, no visible borders,
+ *   full-viewport photography, 40px compressed type. Electric Blue (#3E6AE1)
+ *   primary CTA. Carbon Dark (#171A20) for text and dark sections.
+ *
+ *   Judgment: spec emphasizes "radical subtraction"; brand accent hex picked
+ *   as Electric Blue (#3E6AE1) per the Quick Color Reference.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="tesla"] {
+  /* ─── SURFACES — white ramp ─────────────────────────────────────────────── */
+  --bg-0: 0 0% 100%;         /* #ffffff Pure White page */
+  --bg-1: 0 0% 100%;         /* #ffffff card */
+  --bg-2: 0 0% 96%;          /* #F4F4F4 Light Ash */
+  --bg-3: 0 0% 92%;          /* chip */
+
+  /* ─── FOREGROUNDS — carbon dark ramp ────────────────────────────────────── */
+  --fg-0: 218 16% 11%;       /* #171A20 Carbon Dark */
+  --fg-1: 220 6% 24%;        /* #393C41 Graphite body */
+  --fg-2: 225 3% 37%;        /* #5C5E62 Pewter tertiary */
+  --fg-3: 0 0% 56%;          /* #8E8E8E Silver Fog */
+  --fg-4: 0 0% 88%;          /* minimal divider */
+
+  /* ─── BRAND — Electric Blue ─────────────────────────────────────────────── */
+  --brand: 223 72% 56%;      /* #3E6AE1 Electric Blue */
+  --brand-hot: 223 72% 64%;
+  --brand-dim: 223 72% 56%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 50%;
+  --warn: 34 100% 45%;
+  --done: 154 58% 40%;
+
+  --focus-ring: 223 72% 56%;
+
+  /* ─── SHADOWS — hero cinematic (heavier for subtraction aesthetic) ──────── */
+  --shadow-sm: 0 0 0 1px rgb(23 26 32 / 0.06);
+  --shadow-md:
+    0 2px 8px rgb(23 26 32 / 0.08);
+  --shadow-lg:
+    0 16px 40px -8px rgb(23 26 32 / 0.16);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.4),
+    0 0 24px -4px hsl(var(--brand) / 0.4);
+
+  /* ─── FONTS — Universal Sans Display fallback ───────────────────────────── */
+  --font-sans:
+    'Universal Sans Display', 'Inter Variable', Inter, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-0);
+  --secondary: var(--bg-2);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.25rem;         /* 4px — Tesla's tight corner radius */
+}

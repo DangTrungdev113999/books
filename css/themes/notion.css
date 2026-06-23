@@ -1,0 +1,83 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Notion" theme
+ *
+ *   Aesthetic: Notion marketing — warm-white (#f6f5f4) canvas alternating
+ *   with pure white, 95% black body text, single Notion Blue accent
+ *   (#0075de). Every gray carries a yellow-brown undertone à la Notion's
+ *   signature warmth, with whisper-soft multi-layer card shadows.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="notion"] {
+  /* ─── SURFACES — warm white ramp ────────────────────────────────────────── */
+  --bg-0: 30 14% 97%;        /* #f6f5f4 Warm White — page */
+  --bg-1: 0 0% 100%;         /* Pure white — card */
+  --bg-2: 30 14% 95%;        /* hover tint */
+  --bg-3: 30 10% 92%;        /* chip */
+
+  /* ─── FOREGROUNDS — warm near-black ramp ────────────────────────────────── */
+  --fg-0: 0 0% 4%;           /* 95% black for headings */
+  --fg-1: 30 4% 19%;         /* #31302e Warm Dark */
+  --fg-2: 22 4% 37%;         /* #615d59 Warm Gray 500 */
+  --fg-3: 25 6% 63%;         /* #a39e98 Warm Gray 300 */
+  --fg-4: 0 0% 87%;          /* #dddddd border */
+
+  /* ─── BRAND — Notion Blue ───────────────────────────────────────────────── */
+  --brand: 208 100% 44%;     /* #0075de Notion Blue */
+  --brand-hot: 211 100% 47%; /* #097fe8 Focus Blue — brighter */
+  --brand-dim: 208 100% 44%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 21 100% 43%;        /* #dd5b00 Orange/warning serves error too */
+  --warn: 21 100% 43%;       /* #dd5b00 Notion Orange */
+  --done: 177 57% 39%;       /* #2a9d99 Teal */
+
+  --focus-ring: 211 100% 47%;
+
+  /* ─── SHADOWS — whisper multi-layer, Notion's signature lift ────────────── */
+  --shadow-sm:
+    0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-md:
+    0 2px 8px rgb(0 0 0 / 0.04),
+    0 1px 2px rgb(0 0 0 / 0.03);
+  --shadow-lg:
+    0 4px 18px rgb(0 0 0 / 0.04),
+    0 2px 8px rgb(0 0 0 / 0.027),
+    0 0.8px 3px rgb(0 0 0 / 0.02);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand) / 0.25),
+    0 0 18px -4px hsl(var(--brand) / 0.35);
+
+  /* ─── FONTS — serif headings, sans body (Notion-style) ──────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, -apple-system, BlinkMacSystemFont, ui-sans-serif,
+    system-ui, 'Helvetica Neue', sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', 'Source Serif 4', 'Lyon', Georgia,
+    'Times New Roman', ui-serif, serif;
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-1);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

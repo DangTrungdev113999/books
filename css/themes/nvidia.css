@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Nvidia" theme
+ *
+ *   Aesthetic: GPU computing — true black canvas with NVIDIA Green (#76b900)
+ *   energy. Uppercase bold type, technical power, 2px square corners, teal
+ *   hover states.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="nvidia"] {
+  /* ─── SURFACES — true black ramp ────────────────────────────────────────── */
+  --bg-0: 0 0% 0%;           /* #000000 True Black */
+  --bg-1: 0 0% 6%;           /* #0f0f0f card */
+  --bg-2: 0 0% 10%;          /* #1a1a1a elevated near-black */
+  --bg-3: 0 0% 14%;          /* chip */
+
+  /* ─── FOREGROUNDS — white → gray ramp ───────────────────────────────────── */
+  --fg-0: 0 0% 100%;         /* #ffffff */
+  --fg-1: 0 0% 93%;          /* near white */
+  --fg-2: 0 0% 65%;          /* #a7a7a7 Gray 300 */
+  --fg-3: 0 0% 46%;          /* #757575 */
+  --fg-4: 0 0% 32%;          /* border */
+
+  /* ─── BRAND — NVIDIA Green ──────────────────────────────────────────────── */
+  --brand: 76 100% 36%;      /* #76b900 NVIDIA Green */
+  --brand-hot: 191 75% 49%;  /* #1eaedb Teal hover */
+  --brand-dim: 76 100% 36%;
+  --brand-fg: 0 0% 0%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 55%;
+  --warn: 37 91% 55%;
+  --done: 76 100% 36%;
+
+  --focus-ring: 76 100% 36%;
+
+  /* ─── SHADOWS — bold tech glow ──────────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.06);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 0 5px rgb(0 0 0 / 0.6);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 16px 32px -8px rgb(0 0 0 / 0.7);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand)),
+    0 0 28px -4px hsl(var(--brand) / 0.5);
+
+  /* ─── FONTS — NVIDIA-EMEA fallback ──────────────────────────────────────── */
+  --font-sans:
+    'NVIDIA Sans', 'Inter Variable', Inter, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 0 0% 28%;
+  --ring: var(--brand);
+  --radius: 0.125rem;        /* 2px */
+}

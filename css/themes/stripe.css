@@ -1,0 +1,85 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Stripe" theme
+ *
+ *   Aesthetic: Stripe marketing — white canvas, signature purple (#533afd)
+ *   CTA, deep navy (#061b31) instead of black for headings. Sohne-style
+ *   weight-300 elegance (we approximate with Inter light weights where used).
+ *
+ *   Judgment call: spec emphasises weight-300 sohne-var for headings; we
+ *   can't load a custom font but the --font-sans falls back through Inter
+ *   Variable which does render at weight 300. Component styles that care
+ *   about light-weight headings can opt in via `font-weight: 300`.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="stripe"] {
+  /* ─── SURFACES — white with blue-tinted borders ─────────────────────────── */
+  --bg-0: 0 0% 100%;         /* white page */
+  --bg-1: 210 33% 99%;       /* #fbfcfd subtle card tint */
+  --bg-2: 210 36% 97%;       /* #f6f9fc hover */
+  --bg-3: 220 47% 93%;       /* #e5edf5 Border Default as chip */
+
+  /* ─── FOREGROUNDS — navy-tinted ramp ────────────────────────────────────── */
+  --fg-0: 212 78% 11%;       /* #061b31 Deep Navy — headings */
+  --fg-1: 215 33% 24%;       /* #273951 Label/Dark Slate */
+  --fg-2: 216 18% 47%;       /* #64748d Slate body */
+  --fg-3: 216 15% 62%;       /* tertiary */
+  --fg-4: 220 47% 93%;       /* #e5edf5 Border Default */
+
+  /* ─── BRAND — Stripe Purple ─────────────────────────────────────────────── */
+  --brand: 247 97% 61%;      /* #533afd */
+  --brand-hot: 240 97% 68%;  /* #665efd brighter */
+  --brand-dim: 247 97% 61%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 338 82% 52%;        /* #ea2261 Ruby */
+  --warn: 31 59% 38%;        /* #9b6829 Lemon */
+  --done: 146 79% 41%;       /* #15be53 Success Green */
+
+  --focus-ring: 247 97% 61%;
+
+  /* ─── SHADOWS — soft double-drop for cards ──────────────────────────────── */
+  --shadow-sm:
+    0 1px 2px rgb(50 50 93 / 0.1);
+  --shadow-md:
+    0 4px 8px rgb(50 50 93 / 0.08),
+    0 1px 3px rgb(0 0 0 / 0.06);
+  --shadow-lg:
+    0 30px 45px -30px rgb(50 50 93 / 0.25),
+    0 18px 36px -18px rgb(0 0 0 / 0.1);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand) / 0.3),
+    0 0 24px -4px hsl(var(--brand) / 0.4);
+
+  /* ─── FONTS — Inter stands in for sohne-var ─────────────────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, 'Sohne', 'Sohne Var', -apple-system,
+    BlinkMacSystemFont, 'SF Pro Text', system-ui, ui-sans-serif, sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', 'Source Serif 4', Georgia, ui-serif, serif;
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.375rem;
+}

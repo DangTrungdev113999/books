@@ -1,0 +1,83 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Claude" theme
+ *
+ *   Aesthetic: Anthropic Claude marketing pages — parchment canvas, warm
+ *   neutrals, terracotta accent, organic illustration feel. Shares ancestry
+ *   with Salon but calibrated straight from the getdesign "Claude" spec
+ *   (deeper ivory step, slightly different ring tones, explicit coral brand
+ *   hot). Tokens kept in parity with Salon.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="claude"] {
+  /* ─── SURFACES — parchment → ivory ramp ─────────────────────────────────── */
+  --bg-0: 54 29% 94%;        /* #f5f4ed Parchment */
+  --bg-1: 48 29% 97%;        /* #faf9f5 Ivory */
+  --bg-2: 48 19% 92%;        /* #f0eee6 Border Cream */
+  --bg-3: 48 17% 88%;        /* #e8e6dc Warm Sand */
+
+  /* ─── FOREGROUNDS — warm charcoal ramp ──────────────────────────────────── */
+  --fg-0: 60 3% 8%;          /* #141413 Near Black */
+  --fg-1: 48 4% 29%;         /* #4d4c48 Charcoal Warm */
+  --fg-2: 40 3% 36%;         /* #5e5d59 Olive Gray */
+  --fg-3: 48 4% 51%;         /* #87867f Stone Gray */
+  --fg-4: 48 8% 73%;         /* #c2c0b6 Ring Deep */
+
+  /* ─── BRAND — terracotta + coral ────────────────────────────────────────── */
+  --brand: 14 54% 53%;       /* #c96442 Terracotta */
+  --brand-hot: 15 64% 59%;   /* #d97757 Coral */
+  --brand-dim: 14 54% 53%;
+  --brand-fg: 48 29% 97%;    /* Ivory */
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 55% 46%;          /* #b53333 Error Crimson */
+  --warn: 34 100% 33%;       /* #a65e00 warm amber */
+  --done: 114 30% 37%;       /* #4a7c42 warm moss */
+
+  --focus-ring: 207 81% 57%; /* #3898ec Focus Blue */
+
+  /* ─── SHADOWS — warm rings, whisper drop ────────────────────────────────── */
+  --shadow-sm:
+    0 0 0 1px rgb(209 207 197 / 0.75);
+  --shadow-md:
+    0 0 0 1px rgb(194 192 182 / 0.85),
+    0 1px 2px 0 rgb(20 20 19 / 0.04);
+  --shadow-lg:
+    0 0 0 1px rgb(194 192 182 / 0.9),
+    0 4px 24px rgb(20 20 19 / 0.06);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.35),
+    0 0 20px -4px hsl(var(--brand) / 0.3);
+
+  /* ─── FONTS — serif-first editorial stack ───────────────────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman',
+    ui-serif, serif;
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-1);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

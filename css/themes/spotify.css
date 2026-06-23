@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Spotify" theme
+ *
+ *   Aesthetic: Spotify app — near-black immersive dark (#121212 → #1f1f1f)
+ *   with Spotify Green (#1ed760) reserved for play/active states. Bold,
+ *   confident, functional. Type is maximalist; we lean on heavy weights
+ *   via our existing Inter variable stack.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="spotify"] {
+  /* ─── SURFACES — near-black hierarchy ───────────────────────────────────── */
+  --bg-0: 0 0% 7%;           /* #121212 Near Black — page */
+  --bg-1: 0 0% 9%;           /* #181818 Dark Surface — card */
+  --bg-2: 0 0% 12%;          /* #1f1f1f Mid Dark — hover/button */
+  --bg-3: 0 0% 15%;          /* #252525 Dark Card — chip */
+
+  /* ─── FOREGROUNDS — white → gray ramp ───────────────────────────────────── */
+  --fg-0: 0 0% 100%;         /* Pure White */
+  --fg-1: 0 0% 80%;          /* #cbcbcb Near White */
+  --fg-2: 0 0% 70%;          /* #b3b3b3 Silver */
+  --fg-3: 0 0% 49%;          /* #7c7c7c */
+  --fg-4: 0 0% 38%;          /* #4d4d4d Border Gray */
+
+  /* ─── BRAND — Spotify Green ─────────────────────────────────────────────── */
+  --brand: 141 73% 48%;      /* #1ed760 Spotify Green */
+  --brand-hot: 141 72% 42%;  /* #1db954 darker border variant */
+  --brand-dim: 141 73% 48%;
+  --brand-fg: 0 0% 0%;       /* black text on green */
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 354 84% 70%;        /* #f3727f Negative Red */
+  --warn: 32 100% 58%;       /* #ffa42b Warning Orange */
+  --done: 141 73% 48%;       /* same as brand — success uses green */
+
+  --focus-ring: 141 73% 48%;
+
+  /* ─── SHADOWS — heavy drop for elevated cards ───────────────────────────── */
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.4);
+  --shadow-md:
+    0 4px 16px rgb(0 0 0 / 0.5),
+    0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-lg:
+    0 8px 32px rgb(0 0 0 / 0.6),
+    0 4px 12px rgb(0 0 0 / 0.3);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand) / 0.45),
+    0 0 28px -4px hsl(var(--brand) / 0.55);
+
+  /* ─── FONTS — Spotify's Circular feel via Inter ─────────────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, 'Circular', 'Gotham', -apple-system,
+    BlinkMacSystemFont, system-ui, ui-sans-serif, 'Helvetica Neue', sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', Georgia, ui-serif, serif;
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-2);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-0);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 0 0% 38%;         /* lifted from fg-4 so input edges read on dark */
+  --ring: var(--brand);
+  --radius: 0.25rem;
+}

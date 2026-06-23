@@ -1,0 +1,88 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Vercel" theme
+ *
+ *   Aesthetic: Vercel marketing — achromatic precision, near-black #171717
+ *   text on pure white, workflow-accent colors (red/pink/blue) as semantic
+ *   signals. Cards use multi-layer ring+drop shadows with an inner #fafafa
+ *   glow ring; we approximate via our standard shadow stack.
+ *
+ *   Judgment call: Geist isn't loaded in-tree; fallback stack lists Geist
+ *   first so if the system has it (macOS 14+ occasionally, or future font
+ *   install) it wins, otherwise Inter Variable keeps the same geometric
+ *   tone.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="vercel"] {
+  /* ─── SURFACES — white → faint gray ─────────────────────────────────────── */
+  --bg-0: 0 0% 100%;         /* white page */
+  --bg-1: 0 0% 100%;         /* white card */
+  --bg-2: 0 0% 98%;          /* #fafafa Gray 50 */
+  --bg-3: 0 0% 92%;          /* #ebebeb Gray 100 */
+
+  /* ─── FOREGROUNDS — achromatic ramp ─────────────────────────────────────── */
+  --fg-0: 0 0% 9%;           /* #171717 Vercel Black */
+  --fg-1: 0 0% 15%;
+  --fg-2: 0 0% 30%;          /* #4d4d4d Gray 600 */
+  --fg-3: 0 0% 40%;          /* #666666 Gray 500 */
+  --fg-4: 0 0% 92%;          /* #ebebeb Gray 100 border */
+
+  /* ─── BRAND — Vercel Black primary CTA ──────────────────────────────────── */
+  --brand: 0 0% 9%;          /* #171717 */
+  --brand-hot: 0 0% 15%;     /* slightly lighter on hover */
+  --brand-dim: 0 0% 9%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC — Vercel workflow palette ────────────────────────────────── */
+  --rec: 4 100% 65%;         /* #ff5b4f Ship Red */
+  --warn: 324 78% 49%;       /* #de1d8d Preview Pink */
+  --done: 213 92% 49%;       /* #0a72ef Develop Blue serves as "go" */
+
+  --focus-ring: 213 92% 49%; /* develop blue */
+
+  /* ─── SHADOWS — ring + whisper stack, inner #fafafa glow ────────────────── */
+  --shadow-sm:
+    0 0 0 1px rgb(0 0 0 / 0.08);
+  --shadow-md:
+    0 0 0 1px rgb(0 0 0 / 0.08),
+    0 2px 2px rgb(0 0 0 / 0.04);
+  --shadow-lg:
+    0 0 0 1px rgb(0 0 0 / 0.08),
+    0 8px 8px -8px rgb(0 0 0 / 0.04),
+    inset 0 0 0 1px rgb(250 250 250 / 1);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--focus-ring) / 0.3),
+    0 0 20px -4px hsl(var(--focus-ring) / 0.35);
+
+  /* ─── FONTS — Geist-first, Inter fallback ───────────────────────────────── */
+  --font-sans:
+    'Geist', 'Geist Variable', 'Inter Variable', Inter, -apple-system,
+    BlinkMacSystemFont, 'SF Pro Text', system-ui, ui-sans-serif,
+    'Helvetica Neue', sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', Georgia, ui-serif, serif;
+  --font-mono:
+    'Geist Mono', 'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace,
+    SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--focus-ring);
+  --radius: 0.375rem;
+}

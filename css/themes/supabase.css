@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Supabase" theme
+ *
+ *   Aesthetic: Supabase marketing — dark-mode-native (#171717 canvas) with
+ *   emerald green (#3ecf8e, #00c573) as the singular identity marker. Depth
+ *   comes from a meticulous border hierarchy (#242424 → #2e2e2e → #393939),
+ *   not shadows.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="supabase"] {
+  /* ─── SURFACES — near-black ramp ────────────────────────────────────────── */
+  --bg-0: 0 0% 9%;           /* #171717 Dark — page */
+  --bg-1: 0 0% 6%;           /* #0f0f0f Near Black — button/deepest */
+  --bg-2: 0 0% 14%;          /* #242424 Dark Border / elevated */
+  --bg-3: 0 0% 18%;          /* #2e2e2e Border Dark / chip */
+
+  /* ─── FOREGROUNDS — white → gray ramp ───────────────────────────────────── */
+  --fg-0: 0 0% 98%;          /* #fafafa Off White */
+  --fg-1: 0 0% 94%;          /* #efefef Near White */
+  --fg-2: 0 0% 71%;          /* #b4b4b4 Light Gray */
+  --fg-3: 0 0% 54%;          /* #898989 Mid Gray */
+  --fg-4: 0 0% 32%;          /* #363636 Mid Border */
+
+  /* ─── BRAND — Supabase emerald ──────────────────────────────────────────── */
+  --brand: 154 58% 53%;      /* #3ecf8e Supabase Green */
+  --brand-hot: 155 100% 38%; /* #00c573 Link Green */
+  --brand-dim: 154 58% 53%;
+  --brand-fg: 0 0% 6%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 55%;          /* error red */
+  --warn: 37 91% 55%;        /* amber */
+  --done: 154 58% 53%;       /* uses brand */
+
+  --focus-ring: 154 58% 53%;
+
+  /* ─── SHADOWS — minimal; Supabase leans on borders ──────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.04);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.05),
+    0 2px 8px rgb(0 0 0 / 0.35);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 16px 32px -8px rgb(0 0 0 / 0.5);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.35),
+    0 0 22px -4px hsl(var(--brand) / 0.4);
+
+  /* ─── FONTS — Inter replaces Circular ───────────────────────────────────── */
+  --font-sans:
+    'Inter Variable', Inter, 'Circular', -apple-system, BlinkMacSystemFont,
+    system-ui, ui-sans-serif, 'Helvetica Neue', sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', Georgia, ui-serif, serif;
+  --font-mono:
+    'Source Code Pro', 'JetBrains Mono', 'JetBrains Mono Variable',
+    ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-2);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-2);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 0 0% 30%;         /* lifted from fg-4 so input edges read on dark */
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

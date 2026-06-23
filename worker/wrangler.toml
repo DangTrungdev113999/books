@@ -1,0 +1,18 @@
+name = "feedback-pyramid"
+main = "feedback.js"
+compatibility_date = "2025-01-01"
+
+# Link gắn trong tin nhắn Telegram (điền sau khi biết URL GitHub Pages).
+# Ví dụ: "https://dangtrungdev113999.github.io/barbara-minto"
+[vars]
+SITE_URL = ""
+
+# KV để rate-limit. Tạo bằng:  wrangler kv namespace create FEEDBACK_RL
+# rồi dán id trả về vào dưới đây.
+[[kv_namespaces]]
+binding = "FEEDBACK_RL"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# Secrets (KHÔNG để trong file này) — set bằng:
+#   wrangler secret put TELEGRAM_BOT_TOKEN
+#   wrangler secret put TELEGRAM_FEEDBACK_GROUP_ID

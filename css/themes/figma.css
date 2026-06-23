@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Figma" theme
+ *
+ *   Aesthetic: Figma marketing — strictly B&W interface chrome with vibrant
+ *   multi-color hero gradient. The chrome is the gallery wall; color exists
+ *   in the hero. For a multi-theme dashboard we pick a single "brand" hue
+ *   from Figma's hero gradient to act as the CTA/focus tint — electric purple
+ *   reads as the most distinctly Figma of the four hero stops (green, yellow,
+ *   purple, pink).
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="figma"] {
+  /* ─── SURFACES — near-white canvas, stark neutral ramp ──────────────────── */
+  --bg-0: 0 0% 100%;         /* #ffffff page */
+  --bg-1: 0 0% 99%;          /* off-white card */
+  --bg-2: 0 0% 96%;          /* hover */
+  --bg-3: 0 0% 92%;          /* chip */
+
+  /* ─── FOREGROUNDS — pure B&W ramp ───────────────────────────────────────── */
+  --fg-0: 0 0% 0%;           /* #000000 Pure Black — headings */
+  --fg-1: 0 0% 10%;
+  --fg-2: 0 0% 35%;
+  --fg-3: 0 0% 55%;
+  --fg-4: 0 0% 88%;          /* hairline */
+
+  /* ─── BRAND — Figma purple (from hero gradient) ─────────────────────────── */
+  --brand: 252 80% 60%;      /* ~#6d4dea electric purple */
+  --brand-hot: 320 90% 62%;  /* hot pink hover — second hero stop */
+  --brand-dim: 252 80% 60%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC — vibrant playful ────────────────────────────────────────── */
+  --rec: 348 87% 56%;        /* hot red */
+  --warn: 42 96% 55%;        /* bright yellow */
+  --done: 142 75% 42%;       /* electric green */
+
+  --focus-ring: 252 80% 60%; /* dashed outline picks up brand */
+
+  /* ─── SHADOWS — flat mostly, brand glow on focus ────────────────────────── */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-md:
+    0 2px 8px rgb(0 0 0 / 0.08),
+    0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-lg: 0 8px 32px rgb(0 0 0 / 0.12);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand) / 0.35),
+    0 0 24px -4px hsl(var(--brand) / 0.45);
+
+  /* ─── FONTS — system sans, Figma's custom variable weight feel ──────────── */
+  --font-sans:
+    'Inter Variable', Inter, -apple-system, BlinkMacSystemFont,
+    'SF Pro Display', 'Helvetica Neue', system-ui, ui-sans-serif, sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', 'Source Serif 4', Georgia, ui-serif, serif;
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', 'SF Mono', ui-monospace,
+    SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-1);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

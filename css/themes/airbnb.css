@@ -1,0 +1,79 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Airbnb" theme
+ *
+ *   Aesthetic: Travel marketplace — pure white canvas with Rausch Red accent.
+ *   Warm near-black text (#222), photography-first, three-layer shadow lift,
+ *   generous border radii. Cereal VF for type when available.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="airbnb"] {
+  /* ─── SURFACES — pure white → warm light gray ramp ──────────────────────── */
+  --bg-0: 0 0% 100%;         /* #ffffff page canvas */
+  --bg-1: 0 0% 100%;         /* #ffffff card — pure white */
+  --bg-2: 0 0% 98%;          /* #fafafa hover surface */
+  --bg-3: 0 0% 95%;          /* #f2f2f2 button surface / chip */
+
+  /* ─── FOREGROUNDS — warm near black → gray ramp ─────────────────────────── */
+  --fg-0: 0 0% 13%;          /* #222222 Near Black — primary */
+  --fg-1: 0 0% 25%;          /* #3f3f3f Focused Gray */
+  --fg-2: 0 0% 42%;          /* #6a6a6a Secondary */
+  --fg-3: 0 0% 57%;          /* #929292 disabled link tone */
+  --fg-4: 0 0% 76%;          /* #c1c1c1 Border Gray */
+
+  /* ─── BRAND — Rausch Red ────────────────────────────────────────────────── */
+  --brand: 348 100% 61%;     /* #ff385c Rausch Red */
+  --brand-hot: 345 89% 47%;  /* #e00b41 Deep Rausch */
+  --brand-dim: 348 100% 61%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 12 78% 42%;         /* #c13515 Error Red */
+  --warn: 34 100% 50%;       /* warm amber fallback */
+  --done: 158 78% 36%;       /* muted teal-green fallback */
+
+  --focus-ring: 215 100% 63%; /* #428bff Legal Blue */
+
+  /* ─── SHADOWS — three-layer warm lift ───────────────────────────────────── */
+  --shadow-sm:
+    0 0 0 1px rgb(0 0 0 / 0.02);
+  --shadow-md:
+    0 0 0 1px rgb(0 0 0 / 0.02),
+    0 2px 6px rgb(0 0 0 / 0.04);
+  --shadow-lg:
+    0 0 0 1px rgb(0 0 0 / 0.02),
+    0 2px 6px rgb(0 0 0 / 0.04),
+    0 4px 8px rgb(0 0 0 / 0.1);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.35),
+    0 0 22px -4px hsl(var(--brand) / 0.35);
+
+  /* ─── FONTS — Cereal VF with system fallbacks ───────────────────────────── */
+  --font-sans:
+    'Airbnb Cereal VF', 'Circular', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Inter, 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.75rem;
+}

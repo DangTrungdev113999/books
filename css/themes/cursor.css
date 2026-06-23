@@ -1,0 +1,85 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Cursor" theme
+ *
+ *   Aesthetic: Cursor marketing site — warm cream canvas (#f2f1ed) with warm
+ *   near-black text (#26251e) and an urgent orange accent (#f54e00). Reads
+ *   more like a premium print publication than a code editor website; we keep
+ *   the light, warm feel here (despite "AI code editor" sounding dark).
+ *
+ *   Judgment call: the spec calls this a sleek dark gradient editor in the
+ *   task prompt, but the getdesign doc is emphatically light/warm. Honored
+ *   the doc — light cream over chrome dark. If a true dark Cursor variant is
+ *   wanted later, add as separate id.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="cursor"] {
+  /* ─── SURFACES — warm cream ramp ────────────────────────────────────────── */
+  --bg-0: 45 19% 93%;        /* #f2f1ed Cursor Cream — page */
+  --bg-1: 60 18% 97%;        /* #f7f7f4 Surface 100 — card */
+  --bg-2: 45 17% 91%;        /* #ebeae5 Surface 300 — hover */
+  --bg-3: 45 15% 89%;        /* #e6e5e0 Surface 400 — chip */
+
+  /* ─── FOREGROUNDS — warm near-black ramp ────────────────────────────────── */
+  --fg-0: 54 14% 13%;        /* #26251e Cursor Dark — headings */
+  --fg-1: 54 10% 20%;        /* softened body */
+  --fg-2: 54 6% 38%;         /* secondary */
+  --fg-3: 48 4% 55%;         /* tertiary */
+  --fg-4: 45 8% 80%;         /* hairline border */
+
+  /* ─── BRAND — Cursor Orange ─────────────────────────────────────────────── */
+  --brand: 19 100% 48%;      /* #f54e00 Cursor Orange */
+  --brand-hot: 19 100% 55%;  /* lighter on hover */
+  --brand-dim: 19 100% 48%;
+  --brand-fg: 60 18% 97%;    /* cream text on orange */
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 343 62% 49%;        /* #cf2d56 warm crimson */
+  --warn: 36 58% 48%;        /* #c08532 gold */
+  --done: 162 63% 33%;       /* #1f8a65 muted teal */
+
+  --focus-ring: 19 100% 48%; /* orange focus */
+
+  /* ─── SHADOWS — soft drop, no rings ─────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgb(38 37 30 / 0.05);
+  --shadow-md:
+    0 2px 6px rgb(38 37 30 / 0.06),
+    0 1px 2px rgb(38 37 30 / 0.04);
+  --shadow-lg:
+    0 8px 28px rgb(38 37 30 / 0.1),
+    0 2px 6px rgb(38 37 30 / 0.04);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand) / 0.3),
+    0 0 22px -4px hsl(var(--brand) / 0.35);
+
+  /* ─── FONTS — system stack with mono fallback ───────────────────────────── */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'SF Pro Display', 'Inter Variable', Inter, 'Helvetica Neue', sans-serif;
+  --font-serif:
+    'Source Serif 4 Variable', 'Source Serif 4', Georgia, ui-serif, serif;
+  --font-mono:
+    'Berkeley Mono', 'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace,
+    SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-1);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

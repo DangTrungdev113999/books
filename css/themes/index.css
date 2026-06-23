@@ -1,0 +1,42 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * THEMES — aggregate index
+ *
+ *   Every registered theme lives as its own `.css` file under this folder
+ *   and is imported here. `tokens.css` pulls this single file, keeping
+ *   theme fan-out out of the shared tokens layer.
+ *
+ *   Order matters: salon imports first so its `:root` selector establishes
+ *   the default cascade. Subsequent themes only override their own
+ *   `[data-theme="<id>"]` scope.
+ *
+ *   Adding a new theme: drop `<id>.css` here, add `@import "./<id>.css";`
+ *   below, then append an entry to `src/themes/registry.ts`.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+@import "./salon.css";
+@import "./airbnb.css";
+@import "./apple.css";
+@import "./binance.css";
+@import "./claude.css";
+@import "./cursor.css";
+@import "./figma.css";
+@import "./framer.css";
+@import "./linear.css";
+@import "./meta.css";
+@import "./mintlify.css";
+@import "./nike.css";
+@import "./notion.css";
+@import "./nvidia.css";
+@import "./playstation.css";
+@import "./raycast.css";
+@import "./resend.css";
+@import "./sanity.css";
+@import "./sentry.css";
+@import "./shopify.css";
+@import "./spotify.css";
+@import "./stripe.css";
+@import "./superhuman.css";
+@import "./supabase.css";
+@import "./tesla.css";
+@import "./uber.css";
+@import "./vercel.css";

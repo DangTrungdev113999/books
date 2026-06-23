@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Apple" theme
+ *
+ *   Aesthetic: Apple's product pages — pure white cards on a faint blue-gray
+ *   canvas, near-black ramp, a single blue accent (#0071e3) reserved for
+ *   interactive elements. SF Pro system stack. Shadows are drop shadows —
+ *   never warm ring halos.
+ *
+ *   Token names match Salon exactly (parity rule); only the values differ.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="apple"] {
+  /* ─── SURFACES — light gray canvas → white cards → hover gray ──────────── */
+  --bg-0: 240 7% 97%;        /* #f5f5f7 page canvas */
+  --bg-1: 0 0% 100%;         /* #ffffff cards, elevated */
+  --bg-2: 240 6% 98%;        /* #fafafc button default light */
+  --bg-3: 240 7% 93%;        /* #ededf2 button active, hover */
+
+  /* ─── FOREGROUNDS — near-black ramp, no warm undertone ─────────────────── */
+  --fg-0: 240 6% 12%;        /* #1d1d1f primary text */
+  --fg-1: 0 0% 20%;          /* ~#333 primary body */
+  --fg-2: 240 2% 47%;        /* ~black 48% — secondary */
+  --fg-3: 240 1% 60%;        /* tertiary */
+  --fg-4: 240 9% 84%;        /* #d2d2d7 separator */
+
+  /* ─── BRAND — Apple Blue ────────────────────────────────────────────────── */
+  --brand: 211 100% 45%;     /* #0071e3 */
+  --brand-hot: 211 100% 50%; /* slightly brighter on hover */
+  --brand-dim: 211 100% 45%; /* same hue, alpha-layered */
+  --brand-fg: 0 0% 100%;     /* white text on blue */
+
+  /* ─── SEMANTIC — SF-style red/amber/green ──────────────────────────────── */
+  --rec: 4 100% 59%;         /* #ff3b30 */
+  --warn: 35 100% 50%;       /* #ff9500 */
+  --done: 141 53% 49%;       /* #34c759 */
+
+  /* ─── FOCUS — Apple uses blue focus ────────────────────────────────────── */
+  --focus-ring: 211 100% 45%;
+
+  /* ─── SHADOWS — pure drop, no warm rings ───────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-md:
+    0 2px 8px rgb(0 0 0 / 0.06),
+    0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-lg: 3px 5px 30px rgb(0 0 0 / 0.22);
+  --shadow-glow:
+    0 0 0 2px hsl(var(--brand) / 0.25),
+    0 0 16px -4px hsl(var(--brand) / 0.3);
+
+  /* ─── FONTS — system SF stack, no serif ────────────────────────────────── */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
+    'Helvetica Neue', Helvetica, Arial, ui-sans-serif, sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE — identical mapping to Salon ───────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-1);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-2);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

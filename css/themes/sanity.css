@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Sanity" theme
+ *
+ *   Aesthetic: Headless CMS — near-black editorial canvas with coral-red CTA
+ *   (#f36458) and electric blue hover (#0052ef). Content-first, clean
+ *   elevated cards (#212121) with borders.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="sanity"] {
+  /* ─── SURFACES — near-black ramp ────────────────────────────────────────── */
+  --bg-0: 0 0% 4%;           /* #0b0b0b page canvas */
+  --bg-1: 0 0% 13%;          /* #212121 Surface card */
+  --bg-2: 0 0% 17%;          /* elevated */
+  --bg-3: 0 0% 21%;          /* #353535 prominent border-bg */
+
+  /* ─── FOREGROUNDS — white → gray ramp ───────────────────────────────────── */
+  --fg-0: 0 0% 100%;         /* #ffffff */
+  --fg-1: 0 0% 90%;          /* body */
+  --fg-2: 0 0% 73%;          /* #b9b9b9 silver */
+  --fg-3: 0 0% 47%;          /* #797979 medium gray */
+  --fg-4: 0 0% 30%;          /* border */
+
+  /* ─── BRAND — coral red ─────────────────────────────────────────────────── */
+  --brand: 5 87% 65%;        /* #f36458 CTA coral-red */
+  --brand-hot: 220 100% 47%; /* #0052ef electric blue hover */
+  --brand-dim: 5 87% 65%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 100% 43%;         /* #dd0000 */
+  --warn: 34 100% 55%;
+  --done: 112 100% 42%;      /* #19d600 */
+
+  --focus-ring: 220 100% 47%;
+
+  /* ─── SHADOWS — editorial dark ──────────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.06);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    0 2px 8px rgb(0 0 0 / 0.4);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 16px 32px -8px rgb(0 0 0 / 0.5);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.4),
+    0 0 24px -4px hsl(var(--brand) / 0.4);
+
+  /* ─── FONTS — PT Sans fallback ──────────────────────────────────────────── */
+  --font-sans:
+    'PT Sans', 'Inter Variable', Inter, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: 'PT Serif', Georgia, serif;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-fg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 0 0% 30%;
+  --ring: var(--brand);
+  --radius: 0.5rem;
+}

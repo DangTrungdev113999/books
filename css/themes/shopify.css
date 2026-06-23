@@ -1,0 +1,79 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Shopify" theme
+ *
+ *   Aesthetic: E-commerce — dark-first cinematic true black (#000000) canvas
+ *   with neon green (#36F4A4) accent. Deep Teal surfaces (#02090A → #061A1C
+ *   → #102620), multi-layer shadows.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="shopify"] {
+  /* ─── SURFACES — teal-black ramp ────────────────────────────────────────── */
+  --bg-0: 0 0% 0%;           /* #000000 Void Black page */
+  --bg-1: 195 67% 3%;        /* #02090A Deep Teal card */
+  --bg-2: 185 61% 7%;        /* #061A1C Dark Forest section */
+  --bg-3: 168 43% 10%;       /* #102620 Forest elevated */
+
+  /* ─── FOREGROUNDS — white → muted ramp ──────────────────────────────────── */
+  --fg-0: 0 0% 100%;         /* #ffffff */
+  --fg-1: 0 0% 93%;          /* body */
+  --fg-2: 240 5% 65%;        /* #A1A1AA Muted */
+  --fg-3: 240 4% 46%;        /* mid */
+  --fg-4: 199 22% 28%;       /* #1E2C31 Dark Card Border */
+
+  /* ─── BRAND — Neon Green ────────────────────────────────────────────────── */
+  --brand: 153 89% 58%;      /* #36F4A4 Neon Green */
+  --brand-hot: 153 89% 68%;
+  --brand-dim: 153 89% 58%;
+  --brand-fg: 0 0% 0%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 0 72% 55%;
+  --warn: 37 91% 55%;
+  --done: 153 89% 58%;
+
+  --focus-ring: 153 89% 58%;
+
+  /* ─── SHADOWS — multi-layer cinematic ───────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.08);
+  --shadow-md:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 2px 4px rgb(0 0 0 / 0.4),
+    0 4px 8px rgb(0 0 0 / 0.3);
+  --shadow-lg:
+    0 0 0 1px rgb(255 255 255 / 0.1),
+    0 4px 8px rgb(0 0 0 / 0.4),
+    0 16px 32px -8px rgb(0 0 0 / 0.6);
+  --shadow-glow:
+    0 0 0 1px hsl(var(--brand) / 0.4),
+    0 0 28px -4px hsl(var(--brand) / 0.45);
+
+  /* ─── FONTS — NeueHaasGrotesk fallback ──────────────────────────────────── */
+  --font-sans:
+    'Neue Haas Grotesk Display Pro', 'Inter Variable', Inter, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-0);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--fg-0);
+  --border: var(--fg-4);
+  --input: 199 18% 28%;
+  --ring: var(--brand);
+  --radius: 0.75rem;
+}

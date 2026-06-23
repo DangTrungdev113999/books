@@ -1,0 +1,76 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DESIGN TOKENS — "Nike" theme
+ *
+ *   Aesthetic: Athletic retail — monochrome UI (near-black #111 on pure
+ *   white), massive uppercase Futura-style headlines, square edges, photo-
+ *   driven. Nike Red reserved for urgent accents.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="nike"] {
+  /* ─── SURFACES — white ramp ─────────────────────────────────────────────── */
+  --bg-0: 0 0% 100%;         /* #ffffff page */
+  --bg-1: 0 0% 100%;         /* #ffffff card */
+  --bg-2: 0 0% 96%;          /* #F5F5F5 Light Gray */
+  --bg-3: 0 0% 92%;          /* chip */
+
+  /* ─── FOREGROUNDS — near-black → silver ramp ────────────────────────────── */
+  --fg-0: 0 0% 7%;           /* #111111 Nike Black */
+  --fg-1: 0 0% 18%;          /* emphasized body */
+  --fg-2: 240 1% 44%;        /* #707072 Secondary Text */
+  --fg-3: 0 0% 65%;          /* muted */
+  --fg-4: 240 2% 79%;        /* #CACACB Border Secondary */
+
+  /* ─── BRAND — near-black (monochrome primary) ───────────────────────────── */
+  --brand: 0 0% 7%;          /* #111111 Nike Black */
+  --brand-hot: 0 0% 18%;
+  --brand-dim: 0 0% 7%;
+  --brand-fg: 0 0% 100%;
+
+  /* ─── SEMANTIC ──────────────────────────────────────────────────────────── */
+  --rec: 359 100% 41%;       /* #D30005 Nike Red */
+  --warn: 34 100% 45%;
+  --done: 154 58% 40%;
+
+  --focus-ring: 225 100% 53%; /* #1151FF Link Blue */
+
+  /* ─── SHADOWS — bold cinematic lift ─────────────────────────────────────── */
+  --shadow-sm: 0 0 0 1px rgb(0 0 0 / 0.06);
+  --shadow-md:
+    0 0 0 1px rgb(0 0 0 / 0.06),
+    0 6px 12px rgb(0 0 0 / 0.08);
+  --shadow-lg:
+    0 0 0 1px rgb(0 0 0 / 0.06),
+    0 16px 32px -8px rgb(0 0 0 / 0.18);
+  --shadow-glow:
+    0 0 0 1px hsl(0 0% 7% / 0.9);
+
+  /* ─── FONTS — Helvetica Now, Futura style ───────────────────────────────── */
+  --font-sans:
+    'Helvetica Now Display', 'Helvetica Neue', Helvetica, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Inter, Arial, sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ─── SHADCN BRIDGE ─────────────────────────────────────────────────────── */
+  --background: var(--bg-0);
+  --foreground: var(--fg-0);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-0);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-0);
+  --primary: var(--fg-0);
+  --primary-foreground: var(--bg-1);
+  --secondary: var(--bg-2);
+  --secondary-foreground: var(--fg-0);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-0);
+  --destructive: var(--rec);
+  --destructive-foreground: var(--bg-1);
+  --border: var(--fg-4);
+  --input: var(--fg-4);
+  --ring: var(--fg-0);
+  --radius: 0.125rem;        /* sharp — 2px */
+}

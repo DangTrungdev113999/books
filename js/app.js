@@ -9,6 +9,10 @@
 
 import { THEMES, DEFAULT_THEME } from './themes.js';
 import { setBook, openSection } from './popup.js';
+import {
+  initState, onChange, isRead, progress,
+  getLast, clearLast, getHistory, clearHistory,
+} from './reading-state.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -33,6 +37,17 @@ function ensureVisible() {
   document
     .querySelectorAll('#map foreignObject, #map path, #map circle, #map line')
     .forEach((el) => { el.style.opacity = '1'; });
+  decorateMindmap(); // chạy lại sau MỖI renderData (focusChapter rebuild DOM)
+}
+
+// Gắn trạng thái đọc lên các lá mindmap: đã đọc (✓) / đang đọc dở.
+function decorateMindmap() {
+  const last = getLast();
+  document.querySelectorAll('#map a[href^="#sec-"]').forEach((a) => {
+    const id = (a.getAttribute('href') || '').slice(1);
+    a.classList.toggle('is-read', isRead(id));
+    a.classList.toggle('is-current', Boolean(last && last.id === id));
+  });
 }
 
 /* ═══ THEME SWITCHER (UI/UX copy Stream Intelligent) ══════════════════════ */
@@ -219,13 +234,16 @@ function buildSidebar() {
     (groupNode.children || []).forEach((chNode, ci) => {
       const title = plainText(chNode.content);
       const isExpandable = chNode.children && chNode.children.length;
+      const secIds = collectSecIds(chNode);
       const item = document.createElement('div');
       item.className = 'toc-item';
       item.dataset.kind = isExpandable ? 'expand' : 'read';
       item.title = isExpandable ? 'Mở các mục trên sơ đồ' : 'Đọc ngay';
+      item._secIds = secIds; // dùng để tô trạng thái đã đọc
       item.innerHTML =
         `<span class="no">${ci + 1}</span>` +
         `<span class="label">${title}</span>` +
+        `<span class="tick" aria-hidden="true">${ICON.check}</span>` +
         `<span class="kind">${isExpandable ? ICON.expand : ICON.read}</span>`;
       item.addEventListener('click', () => {
         $$('.toc-item').forEach((x) => x.classList.remove('active'));
@@ -241,6 +259,145 @@ function buildSidebar() {
     });
     toc.appendChild(gEl);
   });
+  refreshSidebarProgress();
+}
+
+// Tập hợp mọi section-id (lá) nằm dưới một node chương.
+function collectSecIds(node) {
+  const ids = [];
+  const walk = (n) => {
+    const m = /href="#(sec-[^"]+)"/.exec(n.content || '');
+    if (m) ids.push(m[1]);
+    (n.children || []).forEach(walk);
+  };
+  walk(node);
+  return ids;
+}
+
+// Tô trạng thái đã-đọc cho từng mục sidebar (done = mọi lá đã đọc; partial = một phần).
+function refreshSidebarProgress() {
+  const last = getLast();
+  $$('.toc-item').forEach((item) => {
+    const ids = item._secIds || [];
+    const read = ids.filter(isRead).length;
+    item.classList.toggle('is-done', ids.length > 0 && read === ids.length);
+    item.classList.toggle('is-partial', read > 0 && read < ids.length);
+    item.classList.toggle('is-current', Boolean(last && ids.includes(last.id)));
+  });
+}
+
+/* ═══ TIẾN ĐỘ · TIẾP TỤC ĐỌC · LỊCH SỬ ═══════════════════════════════════ */
+
+const RING_C = 2 * Math.PI * 9; // chu vi vòng tròn tiến độ (r=9)
+
+const HIST_VERB = { read: 'Đã đọc', highlight: 'Tô đậm', note: 'Ghi chú' };
+const HIST_ICON = {
+  read: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  highlight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h3l6-6"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-3.2-3.2a2 2 0 0 1 0-2.8L16 6"/></svg>',
+  note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+};
+
+const escapeHtml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function sectionLabel(id) {
+  const s = book.sections[id];
+  if (!s) return id;
+  const t = s.title_vi || s.title_en || '';
+  return t === 'Tổng quan chương' ? `${s.chapter} — Tổng quan` : t;
+}
+
+function relTime(ts) {
+  const d = Math.max(0, Date.now() - (ts || 0));
+  const m = Math.floor(d / 60000);
+  if (m < 1) return 'vừa xong';
+  if (m < 60) return `${m} phút trước`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} giờ trước`;
+  const day = Math.floor(h / 24);
+  if (day < 7) return `${day} ngày trước`;
+  return new Date(ts).toLocaleDateString('vi-VN');
+}
+
+function renderProgress() {
+  const { read, total, pct } = progress();
+  const pill = $('#progress-pill');
+  if (!total) { pill.classList.add('hidden'); return; }
+  pill.classList.remove('hidden');
+  $('#prog-read').textContent = read;
+  $('#prog-total').textContent = total;
+  $('#prog-pct').textContent = pct;
+  const fg = pill.querySelector('.ring-fg');
+  fg.style.strokeDasharray = RING_C.toFixed(1);
+  fg.style.strokeDashoffset = (RING_C * (1 - pct / 100)).toFixed(1);
+  pill.title = `Đã đọc ${read}/${total} mục · ${pct}%`;
+  pill.classList.toggle('is-done', read === total);
+}
+
+let resumeDismissed = false;
+function showResume() {
+  const card = $('#resume-card');
+  const last = getLast();
+  if (resumeDismissed || !last || !book.sections[last.id]) { card.classList.add('hidden'); return; }
+  $('#resume-title').textContent = sectionLabel(last.id);
+  card.classList.remove('hidden');
+}
+
+function initResume() {
+  $('#resume-go').addEventListener('click', () => {
+    const last = getLast();
+    if (last && book.sections[last.id]) openSection(last.id, { lang: last.lang, scrollTop: last.scrollTop });
+    $('#resume-card').classList.add('hidden');
+  });
+  $('#resume-dismiss').addEventListener('click', () => {
+    resumeDismissed = true;
+    $('#resume-card').classList.add('hidden');
+  });
+}
+
+function renderHistory() {
+  const list = $('#history-list');
+  const items = getHistory();
+  if (!items.length) {
+    list.innerHTML = '<div class="hp-empty">Chưa có hoạt động nào.<br/>Mở một mục để bắt đầu hành trình đọc.</div>';
+    return;
+  }
+  list.innerHTML = items.map((h) => `
+    <button class="hist-row" data-id="${escapeHtml(h.id)}" data-lang="${escapeHtml(h.lang || '')}">
+      <span class="hist-ic hist-${h.type}">${HIST_ICON[h.type] || ''}</span>
+      <span class="hist-meta">
+        <span class="hist-top"><span class="hist-verb">${HIST_VERB[h.type] || ''}</span><span class="hist-time">${relTime(h.ts)}</span></span>
+        <span class="hist-sec">${escapeHtml(sectionLabel(h.id))}</span>
+        ${h.preview && h.type !== 'read' ? `<span class="hist-prev">“${escapeHtml(h.preview)}”</span>` : ''}
+      </span>
+    </button>`).join('');
+  $$('#history-list .hist-row').forEach((r) => r.addEventListener('click', () => {
+    const id = r.dataset.id;
+    if (!book.sections[id]) return;
+    closeHistory();
+    openSection(id, { lang: r.dataset.lang || undefined });
+  }));
+}
+
+function openHistory() { renderHistory(); $('#history-overlay').classList.remove('hidden'); }
+function closeHistory() { $('#history-overlay').classList.add('hidden'); }
+
+function initHistory() {
+  $('#history-btn').addEventListener('click', openHistory);
+  $('#history-close').addEventListener('click', closeHistory);
+  $('#history-overlay').addEventListener('click', (e) => { if (e.target.id === 'history-overlay') closeHistory(); });
+  $('#history-clear').addEventListener('click', () => { clearHistory(); renderHistory(); });
+  $('#progress-pill').addEventListener('click', openHistory);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('#history-overlay').classList.contains('hidden')) closeHistory();
+  });
+}
+
+function refreshReadingUI() {
+  renderProgress();
+  refreshSidebarProgress();
+  decorateMindmap();
+  showResume();
+  if (!$('#history-overlay').classList.contains('hidden')) renderHistory();
 }
 
 /* ═══ BOOT ════════════════════════════════════════════════════════════════ */
@@ -260,9 +417,16 @@ async function boot() {
   $('#brand-by').textContent = `${book.meta.author} · ${book.meta.title}`;
   $('#map-title').innerHTML = `<b>${book.meta.titleVi}</b> — ${book.meta.sectionCount} mục`;
 
+  initState(book.meta.id, book.meta.sectionCount);
   setBook(book);
   renderMindmap();
   buildSidebar();
+
+  initResume();
+  initHistory();
+  onChange(refreshReadingUI); // mọi thay đổi state → cập nhật toàn bộ UI tiến độ
+  renderProgress();
+  showResume();
 }
 
 boot();

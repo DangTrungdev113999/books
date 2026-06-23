@@ -8,6 +8,7 @@
  * ════════════════════════════════════════════════════════════════════════════ */
 
 import { submitFeedback, isFeedbackEnabled } from './feedback.js';
+import { markRead, setLast } from './reading-state.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -16,17 +17,54 @@ let book = null; // { meta, order, sections }
 let current = null; // section đang mở
 let lang = 'vi';
 
+/* ── Theo dõi tiến độ đọc ──────────────────────────────────────────────────*/
+let suppressTrack = false; // true trong lúc khôi phục cuộn → đừng tự đánh dấu/đè last
+let dwellTimer = null;     // mục ngắn không cuộn được → đánh dấu đã đọc sau dwell
+let lastSaveAt = 0;        // throttle ghi vị trí cuộn
+
+function markReadCurrent() {
+  if (!current) return;
+  markRead(current.id, { lang, title: navTitle(current) });
+}
+
+function saveLast(force = false) {
+  if (!current || suppressTrack) return;
+  const t = Date.now();
+  if (!force && t - lastSaveAt < 500) return;
+  lastSaveAt = t;
+  setLast(current.id, lang, $('#modal-body').scrollTop, { title: navTitle(current) });
+}
+
+function onBodyScroll() {
+  if (!current || suppressTrack) return;
+  saveLast();
+  const body = $('#modal-body');
+  if (body.scrollTop + body.clientHeight >= body.scrollHeight - 40) markReadCurrent();
+}
+
+function armDwell() {
+  clearTimeout(dwellTimer);
+  dwellTimer = setTimeout(() => {
+    const body = $('#modal-body');
+    // mục ngắn (không cuộn được) → coi như đã đọc sau khi nán lại
+    if (current && body.scrollHeight <= body.clientHeight + 8) markReadCurrent();
+  }, 2500);
+}
+
 marked.setOptions({ breaks: false, gfm: true });
 
 export function setBook(b) { book = b; }
 
 /* ── Mở section theo id ───────────────────────────────────────────────────*/
 
-export function openSection(id) {
+export function openSection(id, opts = {}) {
   const section = book.sections[id];
   if (!section) return;
   current = section;
-  lang = section.hasVi ? 'vi' : 'en';
+  // ngôn ngữ: ưu tiên opts.lang (vd "Tiếp tục đọc"), nếu bản đó không có → mặc định
+  const wl = opts.lang;
+  lang = ((wl === 'vi' && section.md_vi) || (wl === 'en' && section.md_en)) ? wl
+    : (section.hasVi ? 'vi' : 'en');
 
   $('#modal-crumb').textContent = `${book.meta.titleVi} · ${section.chapter}`;
 
@@ -41,12 +79,27 @@ export function openSection(id) {
   $('#modal-foot').classList.remove('fb-open'); // mỗi mục mở ra: panel góp ý gập lại
 
   $('#overlay').classList.add('open');
-  $('#modal-body').scrollTop = 0;
   document.body.style.overflow = 'hidden';
-  // đồng bộ highlight sidebar (nếu là mục thuộc 1 chương đơn)
+
+  // Khôi phục / reset vị trí cuộn SAU khi nội dung đã render (tránh markRead nhầm).
+  // Dùng setTimeout (KHÔNG rAF) — rAF bị treo khi tab không focus, giống lỗi opacity markmap.
+  const body = $('#modal-body');
+  suppressTrack = true;
+  clearTimeout(dwellTimer);
+  body.scrollTop = 0;
+  setTimeout(() => {
+    body.scrollTop = opts.scrollTop ? Math.min(opts.scrollTop, body.scrollHeight) : 0;
+    setTimeout(() => {
+      suppressTrack = false;
+      saveLast(true);   // ghi mục đang đọc (vị trí hiện tại)
+      armDwell();       // mục ngắn → đánh dấu đã đọc sau khi nán lại
+    }, 40);
+  }, 0);
 }
 
 function closeModal() {
+  saveLast(true);
+  clearTimeout(dwellTimer);
   $('#overlay').classList.remove('open');
   document.body.style.overflow = '';
   hideTooltip();
@@ -97,7 +150,7 @@ function renderNav() {
   if (nextId) {
     nextBtn.disabled = false;
     nextBtn.dataset.tip = navTitle(book.sections[nextId]);
-    nextBtn.onclick = () => openSection(nextId);
+    nextBtn.onclick = () => { markReadCurrent(); openSection(nextId); }; // sang mục sau = đã đọc mục này
   } else { nextBtn.disabled = true; nextBtn.removeAttribute('data-tip'); nextBtn.onclick = null; }
 }
 
@@ -222,6 +275,9 @@ function initOnce() {
   $('#nav-next').addEventListener('mouseleave', hideNavTip);
   $('#nav-prev').addEventListener('click', hideNavTip);
   $('#nav-next').addEventListener('click', hideNavTip);
+
+  // theo dõi cuộn → lưu vị trí đọc dở + tự đánh dấu đã đọc khi tới cuối
+  $('#modal-body').addEventListener('scroll', onBodyScroll, { passive: true });
 
   // char counter composer
   const cmt = $('#fb-comment');

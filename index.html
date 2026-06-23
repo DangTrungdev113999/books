@@ -37,16 +37,63 @@
     <main id="main">
       <div id="topbar">
         <div id="map-title"></div>
-        <button class="icon-btn" id="theme-btn" aria-haspopup="true" aria-label="Đổi giao diện">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996C18.978 16.668 22 13.646 22 9.9 22 5.646 17.5 2 12 2z"/></svg>
-          <span id="theme-label">Salon</span>
-          <span class="swatch-trio" id="theme-swatch"></span>
-        </button>
+        <div id="topbar-right">
+          <!-- tiến độ đọc tổng: vòng tròn % + X/Y -->
+          <button id="progress-pill" class="hidden" aria-label="Tiến độ đọc" title="Tiến độ đọc">
+            <span class="ring">
+              <svg viewBox="0 0 24 24">
+                <circle class="ring-bg" cx="12" cy="12" r="9" />
+                <circle class="ring-fg" cx="12" cy="12" r="9" />
+              </svg>
+              <span class="ring-pct" id="prog-pct">0</span>
+            </span>
+            <span class="ptext"><b id="prog-read">0</b><span class="sep">/</span><span id="prog-total">0</span></span>
+          </button>
+          <!-- nhật ký hoạt động -->
+          <button class="icon-btn" id="history-btn" aria-label="Lịch sử hoạt động">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l3 2"/></svg>
+            <span>Hoạt động</span>
+          </button>
+          <button class="icon-btn" id="theme-btn" aria-haspopup="true" aria-label="Đổi giao diện">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996C18.978 16.668 22 13.646 22 9.9 22 5.646 17.5 2 12 2z"/></svg>
+            <span id="theme-label">Salon</span>
+            <span class="swatch-trio" id="theme-swatch"></span>
+          </button>
+        </div>
       </div>
       <div id="theme-menu"></div>
+
+      <!-- Thẻ "Tiếp tục đọc" — hiện khi quay lại, đưa về đúng mục + vị trí cuộn -->
+      <div id="resume-card" class="hidden">
+        <span class="rc-glyph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </span>
+        <div class="rc-text">
+          <span class="rc-kicker">Tiếp tục đọc</span>
+          <span class="rc-title" id="resume-title"></span>
+        </div>
+        <button class="rc-go" id="resume-go">Mở tiếp<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+        <button class="rc-dismiss" id="resume-dismiss" aria-label="Bỏ qua">&times;</button>
+      </div>
+
       <svg id="map"></svg>
       <div id="hint-bar">Click vào một nhánh để đọc · cuộn để zoom · kéo để di chuyển</div>
     </main>
+  </div>
+
+  <!-- Drawer Lịch sử hoạt động -->
+  <div id="history-overlay" class="hidden">
+    <aside id="history-panel" role="dialog" aria-label="Lịch sử hoạt động">
+      <header class="hp-head">
+        <div class="hp-title">
+          <span class="hp-kicker">Nhật ký</span>
+          <h2>Hoạt động đọc</h2>
+        </div>
+        <button id="history-clear" class="hp-clear">Xoá hết</button>
+        <button id="history-close" class="hp-close" aria-label="Đóng">&times;</button>
+      </header>
+      <div id="history-list"></div>
+    </aside>
   </div>
 
   <!-- Popup -->

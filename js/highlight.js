@@ -239,6 +239,33 @@ function openPopover(hid) {
 
 function closePopover() { editingHid = null; $('#hl-popover').classList.add('hidden'); }
 
+/* ── Tooltip hiện ghi chú khi hover đoạn đã ghi chú ───────────────────────── */
+
+function showNoteTip(mark, e) {
+  const rec = findHl(mark.dataset.hid);
+  if (!rec || !rec.note) return;
+  const tip = $('#hl-note-tip');
+  tip.innerHTML = '<span class="nt-label">Ghi chú</span><span class="nt-body"></span><span class="nt-hint">Bấm để sửa</span>';
+  tip.querySelector('.nt-body').textContent = rec.note;
+  tip.classList.remove('hidden');
+  positionNoteTip(e);
+  $('#tooltip').classList.remove('show'); // ẩn tooltip bản tiếng Anh nếu đang hiện
+}
+
+function positionNoteTip(e) {
+  const tip = $('#hl-note-tip');
+  const pad = 14;
+  let x = e.clientX + pad;
+  let y = e.clientY + pad;
+  const r = tip.getBoundingClientRect();
+  if (x + r.width > window.innerWidth - 10) x = e.clientX - r.width - pad;
+  if (y + r.height > window.innerHeight - 10) y = e.clientY - r.height - pad;
+  tip.style.left = `${x}px`;
+  tip.style.top = `${y}px`;
+}
+
+function hideNoteTip() { $('#hl-note-tip').classList.add('hidden'); }
+
 /* ── Wiring (1 lần) ───────────────────────────────────────────────────────── */
 
 export function setupHighlighter(getCtx) {
@@ -254,8 +281,24 @@ export function setupHighlighter(getCtx) {
     if (mark) { openPopover(mark.dataset.hid); return; }
   });
 
-  // ẩn thanh nổi / popover khi cuộn hoặc click ra ngoài
-  body.addEventListener('scroll', () => { hideToolbar(); if (!$('#hl-popover').classList.contains('hidden')) closePopover(); }, { passive: true });
+  // hover đoạn đã ghi chú → hiện tooltip ghi chú (theo con trỏ)
+  body.addEventListener('mouseover', (e) => {
+    const mk = e.target.closest && e.target.closest('mark.hl.has-note');
+    if (mk) showNoteTip(mk, e);
+  });
+  body.addEventListener('mousemove', (e) => {
+    const mk = e.target.closest && e.target.closest('mark.hl.has-note');
+    if (mk) positionNoteTip(e);
+    else if (!$('#hl-note-tip').classList.contains('hidden')) hideNoteTip();
+  });
+  body.addEventListener('mouseout', (e) => {
+    const mk = e.target.closest && e.target.closest('mark.hl.has-note');
+    const to = e.relatedTarget;
+    if (mk && (!to || !to.closest || !to.closest('mark.hl.has-note'))) hideNoteTip();
+  });
+
+  // ẩn thanh nổi / popover / tooltip khi cuộn hoặc click ra ngoài
+  body.addEventListener('scroll', () => { hideToolbar(); hideNoteTip(); if (!$('#hl-popover').classList.contains('hidden')) closePopover(); }, { passive: true });
   document.addEventListener('mousedown', (e) => {
     if (!e.target.closest('#hl-toolbar') && !e.target.closest('mark.hl')) hideToolbar();
     // KHÔNG đóng popover khi bấm trong thanh nổi (nút "Ghi chú" vừa MỞ popover) hay trên đoạn tô
@@ -265,4 +308,4 @@ export function setupHighlighter(getCtx) {
   });
 }
 
-export function resetHighlightUI() { hideToolbar(); closePopover(); }
+export function resetHighlightUI() { hideToolbar(); closePopover(); hideNoteTip(); }

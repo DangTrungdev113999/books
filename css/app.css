@@ -852,6 +852,23 @@ mark.hl.note-end::after {
 }
 .hp-save:hover { background: hsl(var(--brand-hot)); }
 
+/* tooltip hiện ghi chú khi hover đoạn đã ghi chú */
+#hl-note-tip {
+  position: fixed; z-index: 310; max-width: 320px;
+  background: hsl(var(--bg-1)); color: hsl(var(--fg-0));
+  border: 1px solid hsl(var(--brand) / 0.45);
+  border-radius: 11px; padding: 9px 13px;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  display: flex; flex-direction: column; gap: 3px;
+}
+#hl-note-tip .nt-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: hsl(var(--brand));
+}
+#hl-note-tip .nt-body { font-size: 13.5px; line-height: 1.5; color: hsl(var(--fg-0)); white-space: pre-wrap; }
+#hl-note-tip .nt-hint { font-size: 10.5px; color: hsl(var(--fg-3)); margin-top: 1px; }
+
 /* ─── Misc ─────────────────────────────────────────────────────────────────*/
 
 .hidden { display: none !important; }

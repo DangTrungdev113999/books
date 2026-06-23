@@ -178,12 +178,14 @@ function attachParagraphTooltips(art) {
 }
 
 function showTooltip(e, text) {
+  if (e.target.closest && e.target.closest('mark.hl.has-note')) return; // nhường tooltip ghi chú
   const tt = $('#tooltip');
   tt.textContent = text;
   tt.classList.add('show');
   moveTooltip(e);
 }
 function moveTooltip(e) {
+  if (e.target.closest && e.target.closest('mark.hl.has-note')) { hideTooltip(); return; }
   const tt = $('#tooltip');
   const pad = 14;
   let x = e.clientX + pad, y = e.clientY + pad;

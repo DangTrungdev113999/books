@@ -238,6 +238,7 @@ function buildBook(book) {
       generatedAt: new Date().toISOString(),
     },
     markmap: mm.join('\n'),
+    order: Object.keys(sectionsMap), // thứ tự đọc tuyến tính → cho nút "Mục tiếp theo"
     sections: sectionsMap,
   };
 

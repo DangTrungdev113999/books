@@ -1,9 +1,10 @@
 /* ════════════════════════════════════════════════════════════════════════════
  * popup.js — Modal đọc nội dung một section.
  *   • Render markdown (marked) → HTML, áp typography theme.
- *   • Toggle EN/VI (primary). Hover đoạn VI → tooltip EN (chỉ khi section.aligned).
+ *   • Toggle EN/VI (primary). Hover đoạn VI → tooltip EN (khi section.aligned).
  *   • Section thiếu bản VI → badge "đang cập nhật", ép hiển thị EN.
- *   • Form góp ý ở cuối → feedback.js.
+ *   • Điều hướng Trước / Mục tiếp theo (theo book.order).
+ *   • Form góp ý → feedback.js.
  * ════════════════════════════════════════════════════════════════════════════ */
 
 import { submitFeedback, isFeedbackEnabled } from './feedback.js';
@@ -11,36 +12,37 @@ import { submitFeedback, isFeedbackEnabled } from './feedback.js';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
+let book = null; // { meta, order, sections }
 let current = null; // section đang mở
 let lang = 'vi';
-let meta = null;
 
 marked.setOptions({ breaks: false, gfm: true });
 
-/* ── Mở section ───────────────────────────────────────────────────────────*/
+export function setBook(b) { book = b; }
 
-export function openSection(section, bookMeta) {
+/* ── Mở section theo id ───────────────────────────────────────────────────*/
+
+export function openSection(id) {
+  const section = book.sections[id];
+  if (!section) return;
   current = section;
-  meta = bookMeta;
   lang = section.hasVi ? 'vi' : 'en';
 
-  $('#modal-crumb').textContent = `${bookMeta.titleVi} · ${section.chapter}`;
-  $('#modal-title').textContent = lang === 'vi' ? section.title_vi : section.title_en;
+  $('#modal-crumb').textContent = `${book.meta.titleVi} · ${section.chapter}`;
 
-  // Lang toggle khả dụng?
   const viBtn = $('#lang-toggle [data-lang="vi"]');
   const enBtn = $('#lang-toggle [data-lang="en"]');
   viBtn.disabled = !section.md_vi;
   enBtn.disabled = !section.md_en;
-  viBtn.style.opacity = section.md_vi ? '' : '0.4';
-  enBtn.style.opacity = section.md_en ? '' : '0.4';
 
   renderBody();
+  renderNav();
   setupFeedback();
 
   $('#overlay').classList.add('open');
   $('#modal-body').scrollTop = 0;
   document.body.style.overflow = 'hidden';
+  // đồng bộ highlight sidebar (nếu là mục thuộc 1 chương đơn)
 }
 
 function closeModal() {
@@ -59,7 +61,6 @@ function renderBody() {
   $('#modal-title').textContent = lang === 'vi' ? current.title_vi : current.title_en;
   $$('#lang-toggle button').forEach((b) => b.classList.toggle('active', b.dataset.lang === lang));
 
-  // badge "đang cập nhật" khi xem mục chưa có VI
   if (lang === 'en' && !current.md_vi) {
     const badge = document.createElement('div');
     badge.className = 'vi-pending';
@@ -72,10 +73,36 @@ function renderBody() {
   art.innerHTML = marked.parse(md || '');
   body.appendChild(art);
 
-  // Hover tooltip EN cho từng đoạn VI (chỉ khi căn chỉnh sạch)
-  if (lang === 'vi' && current.aligned && current.md_en) {
-    attachParagraphTooltips(art);
-  }
+  if (lang === 'vi' && current.aligned && current.md_en) attachParagraphTooltips(art);
+}
+
+/* ── Điều hướng Trước / Tiếp ──────────────────────────────────────────────*/
+
+function renderNav() {
+  const order = book.order || Object.keys(book.sections);
+  const i = order.indexOf(current.id);
+  const prevId = i > 0 ? order[i - 1] : null;
+  const nextId = i >= 0 && i < order.length - 1 ? order[i + 1] : null;
+
+  const prevBtn = $('#nav-prev');
+  const nextBtn = $('#nav-next');
+
+  if (prevId) {
+    prevBtn.disabled = false;
+    $('#prev-title').textContent = navTitle(book.sections[prevId]);
+    prevBtn.onclick = () => { openSection(prevId); $('#modal-body').scrollTop = 0; };
+  } else { prevBtn.disabled = true; $('#prev-title').textContent = '—'; prevBtn.onclick = null; }
+
+  if (nextId) {
+    nextBtn.disabled = false;
+    $('#next-title').textContent = navTitle(book.sections[nextId]);
+    nextBtn.onclick = () => { openSection(nextId); $('#modal-body').scrollTop = 0; };
+  } else { nextBtn.disabled = true; $('#next-title').textContent = '—'; nextBtn.onclick = null; }
+}
+
+function navTitle(sec) {
+  const t = sec.title_vi || sec.title_en || '';
+  return t === 'Tổng quan chương' ? `${sec.chapter} — Tổng quan` : t;
 }
 
 /* ── Tooltip EN cho đoạn VI ────────────────────────────────────────────────*/
@@ -83,7 +110,7 @@ function renderBody() {
 function attachParagraphTooltips(art) {
   const enBlocks = (current.md_en || '').split(/\n{2,}/).map((s) => s.trim()).filter(Boolean);
   const ps = $$('p', art);
-  if (ps.length !== enBlocks.length) return; // không khớp → bỏ qua an toàn
+  if (ps.length !== enBlocks.length) return;
   ps.forEach((p, i) => {
     p.dataset.en = enBlocks[i].replace(/[*_`#>]/g, '').trim();
     p.addEventListener('mouseenter', (e) => showTooltip(e, p.dataset.en));
@@ -101,26 +128,20 @@ function showTooltip(e, text) {
 function moveTooltip(e) {
   const tt = $('#tooltip');
   const pad = 14;
-  let x = e.clientX + pad;
-  let y = e.clientY + pad;
+  let x = e.clientX + pad, y = e.clientY + pad;
   const r = tt.getBoundingClientRect();
   if (x + r.width > window.innerWidth - 10) x = e.clientX - r.width - pad;
   if (y + r.height > window.innerHeight - 10) y = e.clientY - r.height - pad;
   tt.style.left = `${x}px`;
   tt.style.top = `${y}px`;
 }
-function hideTooltip() {
-  $('#tooltip').classList.remove('show');
-}
+function hideTooltip() { $('#tooltip').classList.remove('show'); }
 
 /* ── Feedback form ────────────────────────────────────────────────────────*/
 
 function setupFeedback() {
   const fb = $('#feedback');
-  if (!isFeedbackEnabled()) {
-    fb.classList.add('hidden');
-    return;
-  }
+  if (!isFeedbackEnabled()) { fb.classList.add('hidden'); return; }
   fb.classList.remove('hidden');
 
   const nameEl = $('#fb-name');
@@ -144,40 +165,32 @@ function setupFeedback() {
     setStatus(status, '', 'Đang gửi…');
 
     const res = await submitFeedback({
-      book_id: meta.id,
+      book_id: book.meta.id,
       chapter: current.chapter,
       section_id: current.id,
       section_title: current.title_vi || current.title_en,
-      name,
-      comment,
+      name, comment,
     });
 
     sendBtn.disabled = false;
-    if (res.ok) {
-      setStatus(status, 'ok', '✓ Đã gửi! Cảm ơn bạn.');
-      commentEl.value = '';
-    } else if (res.error === 'rate_limited') {
-      setStatus(status, 'err', `Bạn gửi hơi nhiều — thử lại sau ${Math.ceil((res.retry_after || 0) / 60)} phút`);
-    } else {
-      setStatus(status, 'err', res.message || 'Gửi thất bại, thử lại sau');
-    }
+    if (res.ok) { setStatus(status, 'ok', '✓ Đã gửi! Cảm ơn bạn.'); commentEl.value = ''; }
+    else if (res.error === 'rate_limited') setStatus(status, 'err', `Bạn gửi hơi nhiều — thử lại sau ${Math.ceil((res.retry_after || 0) / 60)} phút`);
+    else setStatus(status, 'err', res.message || 'Gửi thất bại, thử lại sau');
   };
 }
 
-function setStatus(el, kind, msg) {
-  el.className = `status ${kind}`;
-  el.textContent = msg;
-}
+function setStatus(el, kind, msg) { el.className = `status ${kind}`; el.textContent = msg; }
 
 /* ── Wiring chung (1 lần) ─────────────────────────────────────────────────*/
 
 function initOnce() {
   $('#modal-close').addEventListener('click', closeModal);
-  $('#overlay').addEventListener('click', (e) => {
-    if (e.target.id === 'overlay') closeModal();
-  });
+  $('#overlay').addEventListener('click', (e) => { if (e.target.id === 'overlay') closeModal(); });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && $('#overlay').classList.contains('open')) closeModal();
+    if (!$('#overlay').classList.contains('open')) return;
+    if (e.key === 'Escape') closeModal();
+    else if (e.key === 'ArrowRight' && !$('#nav-next').disabled) $('#nav-next').click();
+    else if (e.key === 'ArrowLeft' && !$('#nav-prev').disabled) $('#nav-prev').click();
   });
   $('#lang-toggle').addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-lang]');

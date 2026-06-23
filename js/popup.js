@@ -38,6 +38,7 @@ export function openSection(id) {
   renderBody();
   renderNav();
   setupFeedback();
+  $('#modal-foot').classList.remove('fb-open'); // mỗi mục mở ra: panel góp ý gập lại
 
   $('#overlay').classList.add('open');
   $('#modal-body').scrollTop = 0;
@@ -89,15 +90,15 @@ function renderNav() {
 
   if (prevId) {
     prevBtn.disabled = false;
-    $('#prev-title').textContent = navTitle(book.sections[prevId]);
-    prevBtn.onclick = () => { openSection(prevId); $('#modal-body').scrollTop = 0; };
-  } else { prevBtn.disabled = true; $('#prev-title').textContent = '—'; prevBtn.onclick = null; }
+    prevBtn.dataset.tip = navTitle(book.sections[prevId]);
+    prevBtn.onclick = () => openSection(prevId);
+  } else { prevBtn.disabled = true; prevBtn.removeAttribute('data-tip'); prevBtn.onclick = null; }
 
   if (nextId) {
     nextBtn.disabled = false;
-    $('#next-title').textContent = navTitle(book.sections[nextId]);
-    nextBtn.onclick = () => { openSection(nextId); $('#modal-body').scrollTop = 0; };
-  } else { nextBtn.disabled = true; $('#next-title').textContent = '—'; nextBtn.onclick = null; }
+    nextBtn.dataset.tip = navTitle(book.sections[nextId]);
+    nextBtn.onclick = () => openSection(nextId);
+  } else { nextBtn.disabled = true; nextBtn.removeAttribute('data-tip'); nextBtn.onclick = null; }
 }
 
 function navTitle(sec) {
@@ -189,6 +190,11 @@ function setStatus(el, kind, msg) { el.className = `status ${kind}`; el.textCont
 
 function initOnce() {
   $('#modal-close').addEventListener('click', closeModal);
+  $('#note-toggle').addEventListener('click', () => {
+    const foot = $('#modal-foot');
+    foot.classList.toggle('fb-open');
+    if (foot.classList.contains('fb-open')) setTimeout(() => $('#fb-name').focus(), 80);
+  });
   $('#overlay').addEventListener('click', (e) => { if (e.target.id === 'overlay') closeModal(); });
   document.addEventListener('keydown', (e) => {
     if (!$('#overlay').classList.contains('open')) return;

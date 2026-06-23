@@ -66,31 +66,37 @@
       </header>
       <div id="modal-body"></div>
       <div id="modal-foot">
-        <div id="nav-row">
-          <button class="nav-btn prev" id="nav-prev">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-            <span class="nb-label"><span class="nb-kicker">Trước</span><span class="nb-title" id="prev-title"></span></span>
-          </button>
-          <button class="nav-btn next" id="nav-next">
-            <span class="nb-label"><span class="nb-kicker">Mục tiếp theo</span><span class="nb-title" id="next-title"></span></span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
-        </div>
+        <!-- panel góp ý: gập mặc định, xổ ra khi bấm "Ghi điều học được" -->
         <section id="feedback">
-          <h4>✍️ Bạn học được gì từ phần này?</h4>
-          <p class="hint">Ghi lại 1–2 điều bạn rút ra. Gửi đi sẽ được chia sẻ với nhóm học tập trên Telegram.</p>
-          <p class="hint fb-note hidden" id="fb-note">⚙️ <em>Tính năng gửi Telegram đang chờ cấu hình — bạn vẫn gõ thử được, gửi sẽ bật sau.</em></p>
-          <div class="row">
-            <input id="fb-name" type="text" placeholder="Tên của bạn" maxlength="50" />
-          </div>
-          <div class="row">
-            <textarea id="fb-comment" placeholder="Mình học được rằng…" maxlength="1000"></textarea>
-          </div>
-          <div class="actions">
-            <button class="btn-primary" id="fb-send">Gửi</button>
-            <span class="status" id="fb-status"></span>
+          <div class="fb-inner">
+            <p class="hint" id="fb-hint">Ghi 1–2 điều bạn rút ra — gửi để chia sẻ với nhóm học tập trên Telegram.</p>
+            <p class="hint fb-note hidden" id="fb-note">⚙️ <em>Tính năng gửi đang chờ cấu hình — bạn vẫn gõ thử được, gửi sẽ bật sau.</em></p>
+            <div class="fb-grid">
+              <input id="fb-name" type="text" placeholder="Tên của bạn" maxlength="50" />
+              <textarea id="fb-comment" placeholder="Mình học được rằng…" maxlength="1000"></textarea>
+              <div class="actions">
+                <button class="btn-primary" id="fb-send">Gửi</button>
+                <span class="status" id="fb-status"></span>
+              </div>
+            </div>
           </div>
         </section>
+        <!-- thanh footer gọn: luôn 1 dòng -->
+        <div id="foot-bar">
+          <button class="foot-btn" id="nav-prev" title="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            <span>Trước</span>
+          </button>
+          <button class="foot-btn note-toggle" id="note-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span>Ghi điều học được</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+          </button>
+          <button class="foot-btn" id="nav-next" title="">
+            <span>Tiếp</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>

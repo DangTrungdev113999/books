@@ -138,6 +138,25 @@ function moveTooltip(e) {
 }
 function hideTooltip() { $('#tooltip').classList.remove('show'); }
 
+/* ── Tooltip tên bài cho nút Trước/Tiếp (fixed, không bị cắt) ──────────────*/
+
+function showNavTip(btn, kicker) {
+  const tip = btn.dataset.tip;
+  if (!tip || btn.disabled) return;
+  const nt = $('#navtip');
+  nt.innerHTML = `<span class="nt-kicker">${kicker}</span>${tip.replace(/</g, '&lt;')}`;
+  nt.style.visibility = 'hidden';
+  nt.classList.add('show');
+  const b = btn.getBoundingClientRect();
+  const r = nt.getBoundingClientRect();
+  let left = b.left + b.width / 2 - r.width / 2;
+  left = Math.max(10, Math.min(left, window.innerWidth - r.width - 10));
+  nt.style.left = `${left}px`;
+  nt.style.top = `${b.top - r.height - 9}px`;
+  nt.style.visibility = '';
+}
+function hideNavTip() { $('#navtip').classList.remove('show'); }
+
 /* ── Feedback form ────────────────────────────────────────────────────────*/
 
 function setupFeedback() {
@@ -157,6 +176,8 @@ function setupFeedback() {
   commentEl.value = '';
   status.textContent = '';
   status.className = 'status';
+  const c = $('#fb-count');
+  if (c) { c.textContent = '0 / 1000'; c.classList.remove('warn'); }
 
   sendBtn.onclick = async () => {
     const name = nameEl.value.trim();
@@ -194,6 +215,23 @@ function initOnce() {
     const foot = $('#modal-foot');
     foot.classList.toggle('fb-open');
     if (foot.classList.contains('fb-open')) setTimeout(() => $('#fb-name').focus(), 80);
+  });
+
+  // tooltip tên bài (fixed) cho prev/next
+  $('#nav-prev').addEventListener('mouseenter', (e) => showNavTip(e.currentTarget, 'Mục trước'));
+  $('#nav-next').addEventListener('mouseenter', (e) => showNavTip(e.currentTarget, 'Mục tiếp theo'));
+  $('#nav-prev').addEventListener('mouseleave', hideNavTip);
+  $('#nav-next').addEventListener('mouseleave', hideNavTip);
+  $('#nav-prev').addEventListener('click', hideNavTip);
+  $('#nav-next').addEventListener('click', hideNavTip);
+
+  // char counter composer
+  const cmt = $('#fb-comment');
+  cmt.addEventListener('input', () => {
+    const n = cmt.value.length;
+    const c = $('#fb-count');
+    c.textContent = `${n} / 1000`;
+    c.classList.toggle('warn', n > 900);
   });
   $('#overlay').addEventListener('click', (e) => { if (e.target.id === 'overlay') closeModal(); });
   document.addEventListener('keydown', (e) => {

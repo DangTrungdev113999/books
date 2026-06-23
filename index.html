@@ -28,7 +28,6 @@
   <div id="app">
     <aside id="sidebar">
       <div id="brand">
-        <div class="kicker">Sơ đồ tư duy</div>
         <h1 id="brand-title">Nguyên lý Kim tự tháp</h1>
         <div class="by" id="brand-by">Barbara Minto · The Pyramid Principle</div>
       </div>
@@ -71,12 +70,16 @@
           <div class="fb-inner">
             <p class="hint" id="fb-hint">Ghi 1–2 điều bạn rút ra — gửi để chia sẻ với nhóm học tập trên Telegram.</p>
             <p class="hint fb-note hidden" id="fb-note">⚙️ <em>Tính năng gửi đang chờ cấu hình — bạn vẫn gõ thử được, gửi sẽ bật sau.</em></p>
-            <div class="fb-grid">
-              <input id="fb-name" type="text" placeholder="Tên của bạn" maxlength="50" />
-              <textarea id="fb-comment" placeholder="Mình học được rằng…" maxlength="1000"></textarea>
-              <div class="actions">
-                <button class="btn-primary" id="fb-send">Gửi</button>
+            <div class="composer">
+              <input id="fb-name" class="cmp-name" type="text" placeholder="Tên của bạn" maxlength="50" />
+              <textarea id="fb-comment" class="cmp-text" placeholder="Mình học được điều gì từ phần này?" maxlength="1000"></textarea>
+              <div class="cmp-bar">
+                <span class="cmp-count" id="fb-count">0</span>
                 <span class="status" id="fb-status"></span>
+                <button class="btn-send" id="fb-send">
+                  <span>Gửi</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
+                </button>
               </div>
             </div>
           </div>
@@ -102,6 +105,7 @@
   </div>
 
   <div id="tooltip"></div>
+  <div id="navtip"></div>
 
   <script type="module" src="js/app.js"></script>
 </body>

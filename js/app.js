@@ -64,23 +64,40 @@ function initTheme() {
 
 /* ── Markmap ──────────────────────────────────────────────────────────────*/
 
-// Gập/mở một node: payload.fold = 1 → gập
-function setFold(node, folded) {
-  node.payload = { ...(node.payload || {}), fold: folded ? 1 : 0 };
+// Ép mọi node/nhánh về opacity 1 (chống transition d3 bị treo khi tab throttle)
+function ensureVisible() {
+  document
+    .querySelectorAll('#map foreignObject, #map path, #map circle, #map line')
+    .forEach((el) => {
+      el.style.opacity = '1';
+    });
 }
 
-// Mở rộng riêng một chương (gập các chương khác cùng nhóm) rồi fit
-function focusChapter(target) {
+// Gập/mở một node: payload.fold = 1 → gập (mutate tại chỗ để markmap giữ tham chiếu)
+function setFold(node, folded) {
+  if (!node.payload) node.payload = {};
+  node.payload.fold = folded ? 1 : 0;
+}
+
+// Mở rộng riêng một chương: mở nhóm chứa nó, gập nhóm/chương khác, rồi căn giữa.
+// Dùng renderData() (tôn trọng payload.fold) thay vì setData() (sẽ reset theo
+// initialExpandLevel). centerNode() để đưa chương vào giữa khung nhìn.
+function focusChapter(target, groupNode) {
   for (const group of mmRoot.children || []) {
-    setFold(group, false);
+    setFold(group, group !== groupNode);
     for (const ch of group.children || []) {
-      if (!ch.children || !ch.children.length) continue; // lá đơn — bỏ qua
-      setFold(ch, ch !== target);
+      if (ch.children && ch.children.length) setFold(ch, ch !== target);
     }
   }
-  if (target) setFold(target, false);
-  mm.setData(mmRoot);
-  setTimeout(() => mm.fit(), 60);
+  mm.renderData();
+  ensureVisible();
+  // Render lần 2 sau khi markmap đã đo kích thước các node vừa hiện (tránh
+  // node mới có size 0 ở lần render đầu → vô hình), rồi fit khung nhìn.
+  setTimeout(() => {
+    mm.renderData();
+    mm.fit();
+    ensureVisible();
+  }, 70);
 }
 
 function renderMindmap() {
@@ -93,15 +110,24 @@ function renderMindmap() {
   mm = Markmap.create(
     '#map',
     {
-      autoFit: true,
-      duration: 320,
+      // duration: 0 — markmap fade-in dùng d3 transition; nếu tab bị throttle
+      // (không focus / chạy nền) transition có thể đóng băng ở opacity≈0 khiến
+      // map trắng xoá. Tắt animation → node luôn hiển thị đầy đủ, mọi môi trường.
+      duration: 0,
       initialExpandLevel: 2,
-      spacingVertical: 8,
+      spacingVertical: 10,
       spacingHorizontal: 90,
       paddingX: 18,
     },
     root
   );
+
+  // An toàn kép: ép hiện đủ (phòng trường hợp transition vẫn còn treo)
+  ensureVisible();
+  setTimeout(() => {
+    mm.fit();
+    ensureVisible();
+  }, 50);
 
   // Click lá → popup
   $('#map').addEventListener(
@@ -157,7 +183,7 @@ function buildSidebar() {
         item.classList.add('active');
         // lá đơn (không có con) → mở popup luôn; chương có con → focus
         if (chNode.children && chNode.children.length) {
-          focusChapter(chNode);
+          focusChapter(chNode, groupNode);
         } else {
           const a = /href="#(sec-[^"]+)"/.exec(chNode.content);
           if (a && book.sections[a[1]]) openSection(book.sections[a[1]], book.meta);

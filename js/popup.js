@@ -9,6 +9,7 @@
 
 import { submitFeedback, isFeedbackEnabled } from './feedback.js';
 import { markRead, setLast } from './reading-state.js';
+import { renderHighlights, setupHighlighter, resetHighlightUI } from './highlight.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -100,6 +101,7 @@ export function openSection(id, opts = {}) {
 function closeModal() {
   saveLast(true);
   clearTimeout(dwellTimer);
+  resetHighlightUI();
   $('#overlay').classList.remove('open');
   document.body.style.overflow = '';
   hideTooltip();
@@ -128,6 +130,8 @@ function renderBody() {
   body.appendChild(art);
 
   if (lang === 'vi' && current.aligned && current.md_en) attachParagraphTooltips(art);
+  resetHighlightUI();
+  renderHighlights(art, current.id, lang); // tô lại highlight của đúng (mục, ngôn ngữ)
 }
 
 /* ── Điều hướng Trước / Tiếp ──────────────────────────────────────────────*/
@@ -278,6 +282,9 @@ function initOnce() {
 
   // theo dõi cuộn → lưu vị trí đọc dở + tự đánh dấu đã đọc khi tới cuối
   $('#modal-body').addEventListener('scroll', onBodyScroll, { passive: true });
+
+  // highlight: thanh nổi khi quét chọn + popover sửa/xoá
+  setupHighlighter(() => ({ id: current && current.id, lang }));
 
   // char counter composer
   const cmt = $('#fb-comment');

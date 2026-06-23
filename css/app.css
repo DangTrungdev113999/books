@@ -198,6 +198,8 @@ button { font-family: inherit; cursor: pointer; }
   border-bottom-color: hsl(var(--brand-hot));
 }
 #map .markmap-node > circle { cursor: pointer; }
+/* chữ node cũng bấm được (lá → mở đọc; node có con → xổ/gập) */
+#map .markmap-foreign div { cursor: pointer; }
 
 /* ─── Topbar buttons ───────────────────────────────────────────────────────*/
 
@@ -610,12 +612,12 @@ button { font-family: inherit; cursor: pointer; }
 .ptext b { color: hsl(var(--fg-0)); }
 .ptext .sep { color: hsl(var(--fg-3)); margin: 0 1px; }
 
-/* — thẻ "Tiếp tục đọc" — gọn, nằm sát mép trên (trong dải topbar) — */
+/* — thẻ "Tiếp tục đọc" — gọn, nằm sát mép TRÁI trên (tránh đụng cụm nút phải) — */
 #resume-card {
-  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 10px; left: 18px;
   z-index: 7;
   display: flex; align-items: center; gap: 9px;
-  max-width: min(440px, calc(100% - 360px));
+  max-width: min(440px, calc(100% - 420px));
   padding: 4px 5px 4px 8px;
   border-radius: 11px;
   background: hsl(var(--bg-1) / 0.95);
@@ -624,7 +626,7 @@ button { font-family: inherit; cursor: pointer; }
   backdrop-filter: blur(10px);
   animation: resumeIn 0.4s var(--ease-out-expo, cubic-bezier(0.22,1,0.36,1));
 }
-@keyframes resumeIn { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes resumeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 .rc-glyph {
   flex-shrink: 0; width: 30px; height: 30px; border-radius: 8px;
   display: inline-flex; align-items: center; justify-content: center;

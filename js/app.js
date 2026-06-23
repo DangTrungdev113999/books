@@ -206,6 +206,21 @@ function renderMindmap() {
         e.stopPropagation();
         openSection(href.slice(1));
       }
+      return;
+    }
+    // Click vào CHỮ của node (không phải lá) → xổ/gập children
+    if (e.target.closest('foreignObject')) {
+      const g = e.target.closest('g.markmap-node');
+      const node = g && g.__data__;
+      if (node && node.children && node.children.length) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!node.payload) node.payload = {};
+        node.payload.fold = node.payload.fold ? 0 : 1;
+        mm.renderData(node);
+        ensureVisible();
+        setTimeout(() => { mm.renderData(node); ensureVisible(); }, 60);
+      }
     }
   }, true);
 }

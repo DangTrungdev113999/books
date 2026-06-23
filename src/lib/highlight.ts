@@ -1,41 +1,39 @@
 /* ════════════════════════════════════════════════════════════════════════════
- * highlight.js — Tô đậm (highlight) + ghi chú trên nội dung popup.
- *   • Quét chọn 1 đoạn trong .prose → thanh nổi: chọn màu tô / thêm ghi chú.
- *   • Neo theo (blockIndex trong .prose) + (start,end offset trên textContent)
- *     + quote làm fallback xác thực → tô lại đúng chỗ sau khi render/đổi ngôn ngữ.
- *   • Tô lại bằng Range API, bọc TỪNG text-node fragment trong <mark> riêng →
- *     an toàn khi vùng chọn cắt qua <strong>/<a> (nhiều text-node).
- *   • Highlight gắn theo (sectionId, lang) — xem reading-state.js.
- *   • Click vào đoạn đã tô → popover: đổi màu / ghi chú / xoá.
- *
- *   Màu highlight CỐ ĐỊNH (như bút dạ quang) — chữ vẫn dùng màu theme (--fg) nên
- *   đọc rõ trên mọi theme sáng/tối.
+ * highlight.ts — Tô đậm (highlight) + ghi chú trên nội dung popup.
+ *   Port gần như nguyên bản từ js/highlight.js — vẫn thao tác DOM theo #id
+ *   (Range/TreeWalker). React render scaffold #modal-body / #hl-* một lần, module
+ *   này tự tìm node và mutate; React KHÔNG sở hữu subtree .prose.
+ *   Highlight gắn theo (sectionId, lang) — xem reading-state.ts.
  * ════════════════════════════════════════════════════════════════════════════ */
 
-import { getHighlights, addHighlight, updateHighlight, removeHighlight } from './reading-state.js';
+import { getHighlights, addHighlight, updateHighlight, removeHighlight } from './reading-state';
+import type { Highlight, Lang } from './types';
 
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) =>
+  r.querySelector<T>(s);
+const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) =>
+  Array.from(r.querySelectorAll<T>(s));
 
 export const HL_COLORS = ['amber', 'green', 'sky', 'rose', 'violet'];
 
-let ctx = () => ({ id: null, lang: 'vi' }); // getter ngữ cảnh mục đang mở
-let editingHid = null;
+interface Ctx {
+  id: string | null;
+  lang: Lang;
+}
+let ctx: () => Ctx = () => ({ id: null, lang: 'vi' });
+let editingHid: string | null = null;
 
 /* ── Truy vấn DOM ─────────────────────────────────────────────────────────── */
 
-const getProse = () => $('#modal-body .prose');
+const getProse = () => $<HTMLElement>('#modal-body .prose');
 
-function blockOf(node, prose) {
-  let el = node.nodeType === 3 ? node.parentElement : node;
+function blockOf(node: Node, prose: HTMLElement): Element | null {
+  let el: Element | null = node.nodeType === 3 ? (node.parentElement as Element) : (node as Element);
   while (el && el.parentElement !== prose) el = el.parentElement;
   return el && el.parentElement === prose ? el : null;
 }
 
-// Offset ký tự (theo textContent) của một vị trí (node, offset) trong block.
-// Dùng Range để đo → đúng cho mọi loại boundary (text-node HOẶC element, vd ngay
-// sau một <strong>/<a>) — tránh lỗi đếm hụt khi boundary là element.
-function textOffset(block, node, offsetInNode) {
+function textOffset(block: Element, node: Node, offsetInNode: number): number {
   const r = document.createRange();
   r.setStart(block, 0);
   r.setEnd(node, offsetInNode);
@@ -44,7 +42,14 @@ function textOffset(block, node, offsetInNode) {
 
 /* ── Lấy "mỏ neo" từ vùng đang chọn ───────────────────────────────────────── */
 
-function anchorFromSelection() {
+interface Anchor {
+  blockIndex: number;
+  start: number;
+  end: number;
+  quote: string;
+}
+
+function anchorFromSelection(): Anchor | null {
   const sel = window.getSelection();
   if (!sel || sel.isCollapsed || !sel.rangeCount) return null;
   const range = sel.getRangeAt(0);
@@ -60,10 +65,10 @@ function anchorFromSelection() {
   let start = textOffset(b1, range.startContainer, range.startOffset);
   let end = textOffset(b1, range.endContainer, range.endOffset);
   if (start > end) [start, end] = [end, start];
-  const quote = b1.textContent.slice(start, end).trim();
+  const text = b1.textContent || '';
+  const quote = text.slice(start, end).trim();
   if (quote.length < 1) return null;
-  // bỏ khoảng trắng thừa hai đầu cho gọn
-  const lead = b1.textContent.slice(start, end).length - b1.textContent.slice(start, end).trimStart().length;
+  const lead = text.slice(start, end).length - text.slice(start, end).trimStart().length;
   start += lead;
   end = start + quote.length;
   return { blockIndex, start, end, quote };
@@ -71,52 +76,56 @@ function anchorFromSelection() {
 
 /* ── Bọc <mark> cho một highlight đã neo ──────────────────────────────────── */
 
-function applyOne(block, h) {
+function applyOne(block: Element, h: Highlight) {
   const w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
   let acc = 0;
-  const frags = [];
-  let n;
+  const frags: Array<[Text, number, number]> = [];
+  let n: Node | null;
   while ((n = w.nextNode())) {
-    const len = n.nodeValue.length;
+    const tn = n as Text;
+    const len = tn.nodeValue!.length;
     const ns = acc;
     const ne = acc + len;
     if (ne > h.start && ns < h.end) {
-      frags.push([n, Math.max(0, h.start - ns), Math.min(len, h.end - ns)]);
+      frags.push([tn, Math.max(0, h.start - ns), Math.min(len, h.end - ns)]);
     }
     acc = ne;
     if (acc >= h.end) break;
   }
-  const lastNode = frags.length ? frags[frags.length - 1][0] : null; // fragment cuối (theo thứ tự đọc)
-  // bọc từ cuối lên đầu để không làm lệch các fragment khác
+  const lastNode = frags.length ? frags[frags.length - 1][0] : null;
   for (const [node, s, e] of frags.reverse()) {
     const r = document.createRange();
     r.setStart(node, s);
     r.setEnd(node, e);
     const mark = document.createElement('mark');
     mark.className = `hl hl-${h.color}` + (h.note ? ' has-note' : '');
-    if (h.note && node === lastNode) mark.classList.add('note-end'); // chấm ghi chú chỉ ở cuối
+    if (h.note && node === lastNode) mark.classList.add('note-end');
     mark.dataset.hid = h.id;
-    try { r.surroundContents(mark); } catch (_) { /* fragment không bọc được → bỏ qua */ }
+    try {
+      r.surroundContents(mark);
+    } catch {
+      /* fragment không bọc được → bỏ qua */
+    }
   }
 }
 
 /* ── Render / refresh toàn bộ highlight của mục hiện tại ──────────────────── */
 
-export function renderHighlights(prose, id, lang) {
+export function renderHighlights(prose: HTMLElement | null, id: string, lang: Lang) {
   if (!prose) return;
   const hls = getHighlights(id, lang);
   const children = prose.children;
   for (const h of hls) {
     const block = children[h.blockIndex];
     if (!block) continue;
-    if (block.textContent.slice(h.start, h.end) !== h.quote) continue; // nội dung đổi → degrade, bỏ qua
+    if ((block.textContent || '').slice(h.start, h.end) !== h.quote) continue; // nội dung đổi → bỏ qua
     applyOne(block, h);
   }
 }
 
-function removeAllMarks(prose) {
-  $$('mark.hl', prose).forEach((m) => {
-    const p = m.parentNode;
+function removeAllMarks(prose: HTMLElement) {
+  $$<HTMLElement>('mark.hl', prose).forEach((m) => {
+    const p = m.parentNode!;
     while (m.firstChild) p.insertBefore(m.firstChild, m);
     p.removeChild(m);
   });
@@ -128,14 +137,15 @@ function refresh() {
   if (!prose) return;
   const { id, lang } = ctx();
   removeAllMarks(prose);
-  renderHighlights(prose, id, lang);
+  if (id) renderHighlights(prose, id, lang);
 }
 
 /* ── Thanh nổi khi quét chọn ──────────────────────────────────────────────── */
 
-function colorDotsHTML(active) {
-  return HL_COLORS.map((c) =>
-    `<button class="hl-swatch hl-${c}${c === active ? ' on' : ''}" data-color="${c}" aria-label="${c}"></button>`
+function colorDotsHTML(active: string) {
+  return HL_COLORS.map(
+    (c) =>
+      `<button class="hl-swatch hl-${c}${c === active ? ' on' : ''}" data-color="${c}" aria-label="${c}"></button>`
   ).join('');
 }
 
@@ -143,7 +153,7 @@ function showToolbar() {
   const sel = window.getSelection();
   if (!sel || sel.isCollapsed || !sel.rangeCount) return hideToolbar();
   const a = anchorFromSelection();
-  const tb = $('#hl-toolbar');
+  const tb = $<HTMLElement>('#hl-toolbar')!;
   if (!a) return hideToolbar();
   const rect = sel.getRangeAt(0).getBoundingClientRect();
   if (!rect.width && !rect.height) return hideToolbar();
@@ -162,19 +172,29 @@ function showToolbar() {
   tb.style.top = `${top}px`;
   tb.style.visibility = '';
 
-  tb.querySelectorAll('.hl-swatch').forEach((b) =>
-    b.addEventListener('mousedown', (e) => { e.preventDefault(); createFromSelection(b.dataset.color, false); }));
-  tb.querySelector('.hl-note-btn').addEventListener('mousedown', (e) => { e.preventDefault(); createFromSelection('amber', true); });
+  tb.querySelectorAll<HTMLElement>('.hl-swatch').forEach((b) =>
+    b.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      createFromSelection(b.dataset.color!, false);
+    })
+  );
+  tb.querySelector<HTMLElement>('.hl-note-btn')!.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    createFromSelection('amber', true);
+  });
 }
 
-function hideToolbar() { $('#hl-toolbar').classList.add('hidden'); }
+function hideToolbar() {
+  $<HTMLElement>('#hl-toolbar')?.classList.add('hidden');
+}
 
-function createFromSelection(color, withNote) {
+function createFromSelection(color: string, withNote: boolean) {
   const a = anchorFromSelection();
   if (!a) return hideToolbar();
   const { id, lang } = ctx();
+  if (!id) return hideToolbar();
   const rec = addHighlight(id, lang, { ...a, color, note: '' });
-  window.getSelection().removeAllRanges();
+  window.getSelection()?.removeAllRanges();
   hideToolbar();
   refresh();
   if (withNote) openPopover(rec.id);
@@ -182,30 +202,30 @@ function createFromSelection(color, withNote) {
 
 /* ── Popover sửa/xoá (đổi màu · ghi chú · xoá) ────────────────────────────── */
 
-function findHl(hid) {
+function findHl(hid: string): Highlight | undefined {
   const { id, lang } = ctx();
+  if (!id) return undefined;
   return getHighlights(id, lang).find((h) => h.id === hid);
 }
 
-function openPopover(hid) {
+function openPopover(hid: string) {
   const rec = findHl(hid);
   if (!rec) return;
   editingHid = hid;
-  const pop = $('#hl-popover');
+  const pop = $<HTMLElement>('#hl-popover')!;
   pop.innerHTML =
     `<div class="hp-row hp-swatches">${colorDotsHTML(rec.color)}</div>` +
     `<textarea class="hp-note" placeholder="Thêm ghi chú riêng cho đoạn này…" maxlength="600">${(rec.note || '').replace(/</g, '&lt;')}</textarea>` +
     `<div class="hp-actions">` +
-      `<button class="hp-del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Xoá</button>` +
-      `<button class="hp-save">Lưu ghi chú</button>` +
+    `<button class="hp-del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Xoá</button>` +
+    `<button class="hp-save">Lưu ghi chú</button>` +
     `</div>`;
   pop.classList.remove('hidden');
 
-  // định vị cạnh đoạn tô
-  const mark = $(`mark.hl[data-hid="${hid}"]`);
+  const mark = $<HTMLElement>(`mark.hl[data-hid="${hid}"]`);
   pop.style.visibility = 'hidden';
   const r = pop.getBoundingClientRect();
-  const m = (mark || $('#modal')).getBoundingClientRect();
+  const m = (mark || $<HTMLElement>('#modal')!).getBoundingClientRect();
   let left = Math.min(m.left, window.innerWidth - r.width - 12);
   left = Math.max(12, left);
   let top = m.bottom + 8;
@@ -214,22 +234,26 @@ function openPopover(hid) {
   pop.style.top = `${top}px`;
   pop.style.visibility = '';
 
-  pop.querySelectorAll('.hl-swatch').forEach((b) =>
+  pop.querySelectorAll<HTMLElement>('.hl-swatch').forEach((b) =>
     b.addEventListener('click', () => {
       const { id, lang } = ctx();
+      if (!id) return;
       updateHighlight(id, lang, hid, { color: b.dataset.color });
       pop.querySelectorAll('.hl-swatch').forEach((x) => x.classList.toggle('on', x === b));
       refresh();
-    }));
-  const ta = pop.querySelector('.hp-note');
-  pop.querySelector('.hp-save').addEventListener('click', () => {
+    })
+  );
+  const ta = pop.querySelector<HTMLTextAreaElement>('.hp-note')!;
+  pop.querySelector<HTMLElement>('.hp-save')!.addEventListener('click', () => {
     const { id, lang } = ctx();
+    if (!id) return;
     updateHighlight(id, lang, hid, { note: ta.value.trim() });
     refresh();
     closePopover();
   });
-  pop.querySelector('.hp-del').addEventListener('click', () => {
+  pop.querySelector<HTMLElement>('.hp-del')!.addEventListener('click', () => {
     const { id, lang } = ctx();
+    if (!id) return;
     removeHighlight(id, lang, hid);
     refresh();
     closePopover();
@@ -237,23 +261,27 @@ function openPopover(hid) {
   setTimeout(() => ta.focus(), 30);
 }
 
-function closePopover() { editingHid = null; $('#hl-popover').classList.add('hidden'); }
+function closePopover() {
+  editingHid = null;
+  $<HTMLElement>('#hl-popover')?.classList.add('hidden');
+}
 
 /* ── Tooltip hiện ghi chú khi hover đoạn đã ghi chú ───────────────────────── */
 
-function showNoteTip(mark, e) {
-  const rec = findHl(mark.dataset.hid);
+function showNoteTip(mark: HTMLElement, e: MouseEvent) {
+  const rec = findHl(mark.dataset.hid!);
   if (!rec || !rec.note) return;
-  const tip = $('#hl-note-tip');
-  tip.innerHTML = '<span class="nt-label">Ghi chú</span><span class="nt-body"></span><span class="nt-hint">Bấm để sửa</span>';
-  tip.querySelector('.nt-body').textContent = rec.note;
+  const tip = $<HTMLElement>('#hl-note-tip')!;
+  tip.innerHTML =
+    '<span class="nt-label">Ghi chú</span><span class="nt-body"></span><span class="nt-hint">Bấm để sửa</span>';
+  tip.querySelector<HTMLElement>('.nt-body')!.textContent = rec.note;
   tip.classList.remove('hidden');
   positionNoteTip(e);
-  $('#tooltip').classList.remove('show'); // ẩn tooltip bản tiếng Anh nếu đang hiện
+  $<HTMLElement>('#tooltip')?.classList.remove('show'); // ẩn tooltip EN nếu đang hiện
 }
 
-function positionNoteTip(e) {
-  const tip = $('#hl-note-tip');
+function positionNoteTip(e: MouseEvent) {
+  const tip = $<HTMLElement>('#hl-note-tip')!;
   const pad = 14;
   let x = e.clientX + pad;
   let y = e.clientY + pad;
@@ -264,48 +292,68 @@ function positionNoteTip(e) {
   tip.style.top = `${y}px`;
 }
 
-function hideNoteTip() { $('#hl-note-tip').classList.add('hidden'); }
+function hideNoteTip() {
+  $<HTMLElement>('#hl-note-tip')?.classList.add('hidden');
+}
 
 /* ── Wiring (1 lần) ───────────────────────────────────────────────────────── */
 
-export function setupHighlighter(getCtx) {
+export function setupHighlighter(getCtx: () => Ctx) {
   ctx = getCtx;
-  const body = $('#modal-body');
+  const body = $<HTMLElement>('#modal-body')!;
 
-  // mouseup trong nội dung: có vùng chọn → thanh nổi; click vào đoạn đã tô → popover
   body.addEventListener('mouseup', (e) => {
-    const mark = e.target.closest && e.target.closest('mark.hl');
+    const mark = (e.target as Element).closest?.('mark.hl') as HTMLElement | null;
     const sel = window.getSelection();
     const hasSel = sel && !sel.isCollapsed && sel.toString().trim().length > 0;
-    if (hasSel) { setTimeout(showToolbar, 0); return; }
-    if (mark) { openPopover(mark.dataset.hid); return; }
+    if (hasSel) {
+      setTimeout(showToolbar, 0);
+      return;
+    }
+    if (mark) {
+      openPopover(mark.dataset.hid!);
+      return;
+    }
   });
 
-  // hover đoạn đã ghi chú → hiện tooltip ghi chú (theo con trỏ)
   body.addEventListener('mouseover', (e) => {
-    const mk = e.target.closest && e.target.closest('mark.hl.has-note');
-    if (mk) showNoteTip(mk, e);
+    const mk = (e.target as Element).closest?.('mark.hl.has-note') as HTMLElement | null;
+    if (mk) showNoteTip(mk, e as MouseEvent);
   });
   body.addEventListener('mousemove', (e) => {
-    const mk = e.target.closest && e.target.closest('mark.hl.has-note');
-    if (mk) positionNoteTip(e);
-    else if (!$('#hl-note-tip').classList.contains('hidden')) hideNoteTip();
+    const mk = (e.target as Element).closest?.('mark.hl.has-note') as HTMLElement | null;
+    if (mk) positionNoteTip(e as MouseEvent);
+    else if (!$<HTMLElement>('#hl-note-tip')!.classList.contains('hidden')) hideNoteTip();
   });
   body.addEventListener('mouseout', (e) => {
-    const mk = e.target.closest && e.target.closest('mark.hl.has-note');
-    const to = e.relatedTarget;
+    const ev = e as MouseEvent;
+    const mk = (ev.target as Element).closest?.('mark.hl.has-note') as HTMLElement | null;
+    const to = ev.relatedTarget as Element | null;
     if (mk && (!to || !to.closest || !to.closest('mark.hl.has-note'))) hideNoteTip();
   });
 
-  // ẩn thanh nổi / popover / tooltip khi cuộn hoặc click ra ngoài
-  body.addEventListener('scroll', () => { hideToolbar(); hideNoteTip(); if (!$('#hl-popover').classList.contains('hidden')) closePopover(); }, { passive: true });
+  body.addEventListener(
+    'scroll',
+    () => {
+      hideToolbar();
+      hideNoteTip();
+      if (!$<HTMLElement>('#hl-popover')!.classList.contains('hidden')) closePopover();
+    },
+    { passive: true }
+  );
   document.addEventListener('mousedown', (e) => {
-    if (!e.target.closest('#hl-toolbar') && !e.target.closest('mark.hl')) hideToolbar();
-    // KHÔNG đóng popover khi bấm trong thanh nổi (nút "Ghi chú" vừa MỞ popover) hay trên đoạn tô
-    if (!e.target.closest('#hl-popover') && !e.target.closest('mark.hl') && !e.target.closest('#hl-toolbar')) {
-      if (!$('#hl-popover').classList.contains('hidden')) closePopover();
+    const t = e.target as Element;
+    if (!t.closest('#hl-toolbar') && !t.closest('mark.hl')) hideToolbar();
+    if (!t.closest('#hl-popover') && !t.closest('mark.hl') && !t.closest('#hl-toolbar')) {
+      if (!$<HTMLElement>('#hl-popover')!.classList.contains('hidden')) closePopover();
     }
   });
 }
 
-export function resetHighlightUI() { hideToolbar(); closePopover(); hideNoteTip(); }
+export function resetHighlightUI() {
+  hideToolbar();
+  closePopover();
+  hideNoteTip();
+}
+
+void editingHid; // giữ tham chiếu (trạng thái nội bộ popover đang mở)

@@ -23,15 +23,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Sinh lại data/*.json từ markdown (phòng khi commit thiếu)
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: node scripts/build.mjs
+          cache: npm
+      - run: npm ci
+      # build:books (sinh public/data/*.json) chạy tự động qua prebuild, rồi vite build → dist/
+      - run: npm run build
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'dist'
       - id: deployment
         uses: actions/deploy-pages@v4

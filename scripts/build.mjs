@@ -14,13 +14,15 @@
  * Re-runnable: chạy lại mỗi khi có thêm file _vi.md mới.
  * ──────────────────────────────────────────────────────────────────────────── */
 
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
-const REGISTRY = join(ROOT, 'data', 'books.json');
+const CONTENT_DIR = join(ROOT, 'content');       // nguồn markdown + registry
+const OUT_DIR = join(ROOT, 'public', 'data');     // JSON sinh ra (Vite phục vụ tĩnh)
+const REGISTRY = join(CONTENT_DIR, 'books.json');
 
 const INTRO_MIN_CHARS = 220; // intro phải đủ dài mới tách thành leaf riêng
 
@@ -182,7 +184,7 @@ const linkNode = (title, id) => `[${nodeText(title).replace(/\]/g, '〕').replac
 /* ── Build one book ───────────────────────────────────────────────────────── */
 
 function buildBook(book) {
-  const srcDir = resolve(ROOT, book.source);
+  const srcDir = resolve(CONTENT_DIR, book.source);
   const sectionsMap = {};
   const mm = [`# ${book.titleVi}`, '']; // markmap outline (markdown)
 
@@ -244,9 +246,9 @@ function buildBook(book) {
     sections: sectionsMap,
   };
 
-  const outPath = resolve(ROOT, book.data);
+  const outPath = join(OUT_DIR, book.data);
   writeFileSync(outPath, JSON.stringify(out, null, 2), 'utf8');
-  console.log(`✓ ${book.id}: ${total} sections, ${missingVi} file thiếu VI → ${book.data}`);
+  console.log(`✓ ${book.id}: ${total} sections, ${missingVi} file thiếu VI → public/data/${book.data}`);
 }
 
 /* ── Main ─────────────────────────────────────────────────────────────────── */
@@ -256,10 +258,13 @@ function main() {
     console.error(`Không tìm thấy registry: ${REGISTRY}`);
     process.exit(1);
   }
+  mkdirSync(OUT_DIR, { recursive: true });
   const reg = JSON.parse(readFileSync(REGISTRY, 'utf8'));
   console.log(`Building ${reg.books.length} book(s)…`);
   for (const book of reg.books) buildBook(book);
-  console.log('Xong.');
+  // Copy registry ra public/data để app fetch lúc runtime.
+  writeFileSync(join(OUT_DIR, 'books.json'), JSON.stringify(reg, null, 2), 'utf8');
+  console.log('Xong. → public/data/books.json');
 }
 
 main();

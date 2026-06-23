@@ -1,79 +1,82 @@
-# Hướng dẫn dựng & deploy — Sơ đồ tư duy sách
+# Hướng dẫn dựng & deploy — Sơ đồ tư duy sách (React + Vite)
 
-Trang web tĩnh sơ đồ hoá nội dung sách (markmap) + popup đọc tiếng Việt/Anh + gửi
-"điều bạn học được" lên Telegram.
+Ứng dụng React + Vite + TypeScript: sơ đồ hoá nội dung sách (markmap) + popup đọc
+song ngữ Việt/Anh + highlight/ghi chú + theo dõi tiến độ + gửi "điều bạn học được"
+lên Telegram. Thiết kế để **scale lên nhiều quyển sách**.
 
 ## Cấu trúc
 
 | Thư mục | Vai trò |
 |---|---|
-| `*.md` (root) | Nội dung sách 1 (EN + `_vi.md`). Nguồn cho build. |
-| `scripts/build.mjs` | Sinh `data/<book>.json` từ markdown. |
-| `data/` | `books.json` (registry) + JSON đã sinh. |
-| `index.html`, `css/`, `js/` | Trang web tĩnh (không cần build). |
+| `content/<id>/` | Nội dung sách (file `NN_*.md` + `NN_*_vi.md`). Nguồn cho build. |
+| `content/books.json` | Registry các sách (`id`, `titleVi`, `source`, `data`, `groups`). |
+| `scripts/build.mjs` | Sinh `public/data/<id>.json` + copy registry → `public/data/books.json`. |
+| `public/data/` | JSON đã sinh (app fetch lúc runtime). **Generated — gitignored.** |
+| `src/` | Mã React: `components/`, `hooks/`, `lib/` (module imperative: markmap, popup, highlight). |
+| `css/` | `tokens.css` + 28 theme (`themes/*.css`) + `app.css`. Theme đổi qua `data-theme` trên `<html>`. |
 | `worker/` | Cloudflare Worker chuyển góp ý → Telegram. |
+| `.env` | `VITE_WORKER_URL` (để trống → form góp ý báo "chưa cấu hình"). |
 
-## 1. Build dữ liệu (chạy lại mỗi khi có thêm bản dịch)
-
-```bash
-node scripts/build.mjs
-```
-
-## 2. Chạy thử local
+## 1. Cài & chạy local
 
 ```bash
-python3 -m http.server 8099
-# mở http://localhost:8099
+npm install
+npm run dev      # tự chạy build:books trước (predev), mở http://localhost:5173
 ```
 
-## 3. Thêm sách mới (sau này)
+`npm run build:books` sinh lại `public/data/*.json` từ markdown — chạy tự động qua
+`predev`/`prebuild`, hoặc gọi tay sau khi sửa nội dung/bản dịch.
 
-1. Bỏ các file `NN_*.md` + `NN_*_vi.md` của sách vào một thư mục, vd. `books/<id>/`.
-2. Thêm một mục vào `data/books.json` (`id`, `titleVi`, `source`, `data`, `groups`).
-3. `node scripts/build.mjs`.
+## 2. Build production
+
+```bash
+npm run build    # build:books → tsc → vite build → dist/
+npm run preview  # xem thử bản build
+```
+
+## 3. Thêm sách mới (scale đa sách)
+
+1. Tạo `content/<id>/` và bỏ các file `NN_*.md` + `NN_*_vi.md` vào.
+2. Thêm một mục vào mảng `books` trong `content/books.json`:
+   ```json
+   { "id": "<id>", "title": "...", "titleVi": "...", "author": "...",
+     "source": "<id>", "data": "<id>.json",
+     "groups": [ { "title": "...", "files": ["01", "02"] } ] }
+   ```
+3. `npm run build:books`.
+
+Khi registry có ≥2 sách, **dropdown chọn sách** tự hiện ở đầu sidebar; mỗi sách có
+tiến độ đọc / highlight riêng (localStorage key `book-state:<id>`).
 
 ## 4. Telegram (Cloudflare Worker)
 
-Worker đã viết sẵn ở `worker/`. Dùng **bot cũ** (của Stream Intelligent) + **group mới**.
+Worker ở `worker/`. Sau khi deploy worker, điền URL vào `.env`:
 
-**Cần bạn cung cấp / thực hiện:**
+```
+VITE_WORKER_URL=https://feedback-pyramid.<account>.workers.dev
+```
 
-1. **Tạo group Telegram mới**, add bot cũ vào, cho quyền gửi tin. Lấy `chat_id`:
-   - Gửi 1 tin bất kỳ vào group, rồi mở:
-     `https://api.telegram.org/bot<TOKEN>/getUpdates` → tìm `chat.id` (số âm, vd `-1001234…`).
-2. **Token bot cũ**: lấy lại từ worker Stream Intelligent (`wrangler secret list` không hiện giá trị; nếu cần, dùng lại token từ @BotFather).
-3. Trong thư mục `worker/`:
-   ```bash
-   npm i -g wrangler            # nếu chưa có
-   wrangler login
-   wrangler kv namespace create FEEDBACK_RL     # dán id trả về vào wrangler.toml
-   wrangler secret put TELEGRAM_BOT_TOKEN        # dán token bot cũ
-   wrangler secret put TELEGRAM_FEEDBACK_GROUP_ID # dán chat_id group mới
-   wrangler deploy
-   ```
-4. Copy URL worker in ra (vd `https://feedback-pyramid.<account>.workers.dev`) vào:
-   - `config.js` → `WORKER_URL`
-   - `worker/wrangler.toml` → `[vars] SITE_URL` = URL GitHub Pages (để gắn link trong tin)
-   rồi `wrangler deploy` lại.
+Deploy worker:
+```bash
+cd worker
+npm i -g wrangler
+wrangler login
+wrangler kv namespace create FEEDBACK_RL        # dán id vào wrangler.toml
+wrangler secret put TELEGRAM_BOT_TOKEN
+wrangler secret put TELEGRAM_FEEDBACK_GROUP_ID  # chat_id group (số âm)
+wrangler deploy
+```
 
-> Nếu `WORKER_URL` để trống, ô góp ý tự ẩn — trang vẫn chạy bình thường.
+> `VITE_WORKER_URL` để trống → ô góp ý vẫn hiện nhưng báo "chưa cấu hình worker".
 
 ## 5. Deploy GitHub Pages
 
-1. Tạo repo trên GitHub (vd. `barbara-minto`).
-2. Cập nhật origin CORS trong `worker/feedback.js` nếu domain Pages khác
-   `dangtrungdev113999.github.io` (đã whitelist sẵn domain này).
-3. Push:
-   ```bash
-   git add -A && git commit -m "Init mindmap reader"
-   git branch -M main
-   git remote add origin git@github.com:<user>/<repo>.git
-   git push -u origin main
-   ```
-4. GitHub → Settings → Pages → Source = **GitHub Actions** (workflow `.github/workflows/pages.yml` sẽ tự build & deploy).
+Workflow `.github/workflows/pages.yml` tự `npm ci && npm run build` rồi publish `dist/`.
 
-## Cần bạn gửi mình để mình hoàn tất
+1. GitHub → Settings → Pages → Source = **GitHub Actions**.
+2. Push lên nhánh `main` → workflow tự chạy.
+3. Nếu domain Pages khác `dangtrungdev113999.github.io`, cập nhật CORS trong
+   `worker/feedback.js` và `SITE_URL` trong `worker/wrangler.toml`.
 
-- [ ] Tên repo GitHub (để chỉnh `SITE_URL` + CORS nếu cần).
-- [ ] `chat_id` của group Telegram mới (mình điền vào hướng dẫn secret).
-- [ ] Quyền Cloudflare (API token) **hoặc** bạn tự chạy mục 4 — mình đã viết sẵn toàn bộ.
+> `vite.config.ts` đặt `base: './'` nên app chạy được cả khi deploy ở subpath
+> (vd. `https://<user>.github.io/<repo>/`).

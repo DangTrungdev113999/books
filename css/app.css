@@ -69,6 +69,23 @@ button { font-family: inherit; cursor: pointer; }
 }
 #brand .by { font-size: 12.5px; color: hsl(var(--fg-2)); }
 
+/* Book switcher (đa sách) — chỉ hiện khi có ≥2 sách */
+.book-switcher { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.book-switcher .bs-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: hsl(var(--brand));
+}
+.book-switcher select {
+  appearance: none; -webkit-appearance: none;
+  font: inherit; font-size: 13.5px; font-weight: 600;
+  color: hsl(var(--fg-0)); background: hsl(var(--bg-2));
+  border: 1px solid hsl(var(--bg-3)); border-radius: 9px;
+  padding: 8px 30px 8px 11px; cursor: pointer; width: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.book-switcher select:hover { border-color: hsl(var(--brand) / 0.5); }
+
 #toc { overflow-y: auto; flex: 1; padding: 8px 10px 24px; }
 
 /* mỗi Phần là 1 section rõ ràng: đường kẻ phân cách + khoảng cách rộng */

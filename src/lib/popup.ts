@@ -9,6 +9,7 @@ import { marked } from 'marked';
 import { submitFeedback, isFeedbackEnabled } from './feedback';
 import { markRead, setLast } from './reading-state';
 import { renderHighlights, setupHighlighter, resetHighlightUI } from './highlight';
+import { setupAudio, setAudioBook, loadAudioFor, stopAudio, hideAudio } from './audio';
 import type { BookData, Lang, Section } from './types';
 
 void isFeedbackEnabled; // form luôn hiển thị; helper giữ để dùng nếu cần
@@ -21,6 +22,10 @@ const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document
 let book: BookData | null = null;
 let current: Section | null = null;
 let lang: Lang = 'vi';
+
+/* ── So sánh PDF gốc ──────────────────────────────────────────────────────*/
+let pdfUrl: string | null = null;
+let pdfLoaded = false; // iframe đã nạp src lần đầu chưa (giữ vị trí cuộn của user)
 
 /* ── Theo dõi tiến độ đọc ──────────────────────────────────────────────────*/
 let suppressTrack = false;
@@ -57,8 +62,16 @@ function armDwell() {
 
 marked.setOptions({ breaks: false, gfm: true });
 
-export function setBook(b: BookData) {
+export function setBook(b: BookData, pdf: string | null = null) {
   book = b;
+  setAudioBook(b.meta.id);
+  if (pdf !== pdfUrl) {
+    pdfUrl = pdf;
+    pdfLoaded = false; // sách mới → iframe sẽ nạp lại PDF đúng khi mở lần đầu
+    const frame = $<HTMLIFrameElement>('#pdf-frame');
+    if (frame) frame.removeAttribute('src');
+  }
+  closePdfPane();
 }
 
 /* ── Mở section theo id ───────────────────────────────────────────────────*/
@@ -75,8 +88,6 @@ export function openSection(id: string, opts: { lang?: Lang; scrollTop?: number 
       : section.hasVi
         ? 'vi'
         : 'en';
-
-  $('#modal-crumb')!.textContent = `${book.meta.titleVi} · ${section.chapter}`;
 
   const viBtn = $<HTMLButtonElement>('#lang-toggle [data-lang="vi"]')!;
   const enBtn = $<HTMLButtonElement>('#lang-toggle [data-lang="en"]')!;
@@ -110,6 +121,8 @@ export function closeModal() {
   saveLast(true);
   if (dwellTimer) clearTimeout(dwellTimer);
   resetHighlightUI();
+  closePdfPane();
+  stopAudio();
   $('#overlay')?.classList.remove('open');
   document.body.style.overflow = '';
   hideTooltip();
@@ -143,11 +156,74 @@ function renderBody() {
   const art = document.createElement('article');
   art.className = 'prose';
   art.innerHTML = marked.parse(md || '') as string;
+  // Chip OCR phải chạy TRƯỚC tooltip/highlight: chỉ thay node <em>, giữ nguyên
+  // số <p> để attachParagraphTooltips/renderHighlights không lệch chỉ số.
+  decorateOcrBadges(art);
   body.appendChild(art);
+
+  // Nút "So sánh PDF" ở header: chỉ hiện khi sách có PDF gốc.
+  $('#cmp-toggle')!.classList.toggle('hidden', !pdfUrl);
 
   if (lang === 'vi' && current.aligned && current.md_en) attachParagraphTooltips(art);
   resetHighlightUI();
   renderHighlights(art, current.id, lang);
+
+  // Audio "đọc sách" là bản narration tiếng Việt → chỉ khả dụng khi đang xem VI.
+  if (lang === 'vi') loadAudioFor(current.id);
+  else hideAudio();
+}
+
+/* ── Chip "đoạn gốc lỗi OCR" → mở PDF đối chiếu ───────────────────────────*/
+
+const OCR_RE = /^\s*\[?\s*đoạn gốc.*lỗi OCR\s*\]?\s*$/i;
+
+function decorateOcrBadges(art: HTMLElement) {
+  $$<HTMLElement>('em', art).forEach((em) => {
+    if (!OCR_RE.test(em.textContent || '')) return;
+    const chip = document.createElement(pdfUrl ? 'button' : 'span');
+    chip.className = 'ocr-badge';
+    chip.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<rect x="3" y="4" width="7" height="16" rx="1.2"/><rect x="14" y="4" width="7" height="16" rx="1.2"/></svg>' +
+      '<span>đoạn gốc lỗi OCR</span>';
+    if (pdfUrl) {
+      (chip as HTMLButtonElement).type = 'button';
+      chip.title = 'Mở bản PDF gốc bên cạnh để tự cuộn tới đoạn này';
+      chip.addEventListener('click', openPdfPane);
+    } else {
+      chip.title = 'Đoạn gốc bị lỗi nhận dạng (OCR)';
+    }
+    em.replaceWith(chip);
+  });
+}
+
+/* ── PDF pane (split bên phải) ────────────────────────────────────────────*/
+
+function openPdfPane() {
+  if (!pdfUrl) return;
+  // Viewport hẹp: split không đủ chỗ → mở PDF ở tab mới.
+  if (window.innerWidth < 900) {
+    window.open(pdfUrl, '_blank', 'noopener');
+    return;
+  }
+  const frame = $<HTMLIFrameElement>('#pdf-frame')!;
+  if (!pdfLoaded) {
+    frame.src = pdfUrl;
+    pdfLoaded = true;
+  }
+  $('#overlay')!.classList.add('compare');
+  $('#cmp-toggle')!.classList.add('on');
+}
+
+function closePdfPane() {
+  // KHÔNG xoá src: giữ nguyên vị trí cuộn của user khi mở lại / chuyển mục.
+  $('#overlay')?.classList.remove('compare');
+  $('#cmp-toggle')?.classList.remove('on');
+}
+
+function togglePdfPane() {
+  if ($('#overlay')!.classList.contains('compare')) closePdfPane();
+  else openPdfPane();
 }
 
 /* ── Điều hướng Trước / Tiếp ──────────────────────────────────────────────*/
@@ -326,6 +402,7 @@ export function initReader() {
   inited = true;
 
   $('#modal-close')!.addEventListener('click', closeModal);
+  $('#cmp-toggle')!.addEventListener('click', togglePdfPane);
   $('#note-toggle')!.addEventListener('click', () => {
     const foot = $('#modal-foot')!;
     foot.classList.toggle('fb-open');
@@ -346,6 +423,7 @@ export function initReader() {
   $('#modal-body')!.addEventListener('scroll', onBodyScroll, { passive: true });
 
   setupHighlighter(() => ({ id: current && current.id, lang }));
+  setupAudio();
 
   const cmt = $<HTMLTextAreaElement>('#fb-comment')!;
   cmt.addEventListener('input', () => {

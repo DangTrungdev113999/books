@@ -36,7 +36,7 @@ export function App() {
   const readyId = useRef<string | null>(null);
   if (book && readyId.current !== book.meta.id) {
     initState(book.meta.id, book.meta.sectionCount);
-    setBook(book);
+    setBook(book, entry?.pdf ? `${import.meta.env.BASE_URL}${entry.pdf}` : null);
     readyId.current = book.meta.id;
   }
 

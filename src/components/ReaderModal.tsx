@@ -18,15 +18,30 @@ export function ReaderModal() {
         <div id="modal" role="dialog" aria-modal="true">
           <header id="modal-head">
             <div className="htext">
-              <div className="crumb" id="modal-crumb"></div>
               <h2 id="modal-title"></h2>
             </div>
             <div className="lang-toggle" id="lang-toggle">
-              <button data-lang="vi" className="active">
-                Tiếng Việt
+              <button data-lang="vi" className="active" data-htip="Tiếng Việt" aria-label="Tiếng Việt">
+                VI
               </button>
-              <button data-lang="en">English</button>
+              <button data-lang="en" data-htip="English" aria-label="English">
+                EN
+              </button>
             </div>
+            <button id="audio-toggle" className="hidden" aria-label="Nghe đọc sách" data-htip="Nghe đọc sách">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 14v-1a9 9 0 0 1 18 0v1" />
+                <path d="M19 14a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1v-5z" />
+                <path d="M5 14a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1v-5z" />
+              </svg>
+            </button>
+            <button id="cmp-toggle" className="hidden" aria-label="So sánh bản gốc PDF" data-htip="So sánh với bản PDF gốc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6" />
+              </svg>
+              <span>PDF</span>
+            </button>
             <button id="modal-close" aria-label="Đóng">
               &times;
             </button>
@@ -60,6 +75,25 @@ export function ReaderModal() {
                 </div>
               </div>
             </section>
+            {/* thanh phát "đọc sách" (Vbee TTS) — hiện khi section có audio */}
+            <div id="audio-bar" className="hidden">
+              <audio id="audio-el" preload="none"></audio>
+              <button id="audio-play" aria-label="Phát / Tạm dừng">
+                <svg className="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <svg className="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="6" y="5" width="4" height="14" rx="1" />
+                  <rect x="14" y="5" width="4" height="14" rx="1" />
+                </svg>
+              </button>
+              <span className="audio-label">Nghe</span>
+              <span id="audio-cur" className="audio-time">0:00</span>
+              <input id="audio-seek" className="audio-seek" type="range" min={0} max={0} defaultValue={0} aria-label="Tua" />
+              <span id="audio-dur" className="audio-time">0:00</span>
+              <button id="audio-speed" className="audio-speed" aria-label="Tốc độ đọc">1×</button>
+            </div>
+
             {/* thanh footer gọn: luôn 1 dòng */}
             <div id="foot-bar">
               <button className="foot-btn" id="nav-prev" title="">
@@ -87,6 +121,11 @@ export function ReaderModal() {
             </div>
           </div>
         </div>
+
+        {/* Bản PDF gốc — split bên phải khi bật "So sánh". User tự cuộn tới đoạn cần. */}
+        <aside id="pdf-pane" aria-label="Bản PDF gốc">
+          <iframe id="pdf-frame" title="Bản PDF gốc"></iframe>
+        </aside>
       </div>
 
       {/* Lớp UI nổi — do các module imperative tìm theo id */}

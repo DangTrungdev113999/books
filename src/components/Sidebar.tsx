@@ -62,7 +62,6 @@ export function Sidebar({ registry, entry, book, controller, onChangeBook, onOpe
           </span>
           <span className="sd-text">
             <span className="sd-label">Bản gốc</span>
-            <span className="sd-sub">PDF · {entry.author}</span>
           </span>
           <svg className="sd-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M7 17 17 7" />

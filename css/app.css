@@ -469,13 +469,28 @@ button { font-family: inherit; cursor: pointer; }
 .lang-toggle button {
   border: none; background: transparent;
   color: hsl(var(--fg-2));
-  font-size: 12px; font-weight: 600;
-  padding: 5px 11px; border-radius: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.045em;
+  min-width: 30px; padding: 5px 7px; border-radius: 7px;
   transition: background 0.13s, color 0.13s;
 }
 .lang-toggle button:hover:not(.active):not(:disabled) { color: hsl(var(--fg-0)); }
 .lang-toggle button.active { background: hsl(var(--brand)); color: hsl(var(--brand-fg)); }
 .lang-toggle button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Tooltip gọn cho nút icon ở header (data-htip — tách khỏi data-tip của nav) */
+[data-htip] { position: relative; }
+[data-htip]::after {
+  content: attr(data-htip);
+  position: absolute; top: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%) translateY(3px);
+  background: hsl(var(--fg-0)); color: hsl(var(--bg-0));
+  font-size: 11px; font-weight: 600; letter-spacing: 0; line-height: 1;
+  white-space: nowrap; padding: 6px 9px; border-radius: 7px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0; pointer-events: none; z-index: 210;
+  transition: opacity 0.13s ease, transform 0.13s ease;
+}
+[data-htip]:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 #modal-close {
   border: none; background: transparent;
@@ -486,6 +501,53 @@ button { font-family: inherit; cursor: pointer; }
   transition: background 0.13s, color 0.13s;
 }
 #modal-close:hover { background: hsl(var(--bg-2)); color: hsl(var(--fg-0)); }
+
+/* ─── Nút "So sánh PDF" (header) ─────────────────────────────────────────*/
+#cmp-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+  border: 1px solid hsl(var(--fg-4) / 0.5);
+  background: hsl(var(--bg-0));
+  color: hsl(var(--fg-2));
+  font-size: 12px; font-weight: 600;
+  padding: 6px 11px; border-radius: 8px; height: 32px;
+  transition: background 0.13s, color 0.13s, border-color 0.13s;
+}
+#cmp-toggle svg { width: 15px; height: 15px; }
+#cmp-toggle:hover { color: hsl(var(--fg-0)); border-color: hsl(var(--brand) / 0.5); }
+#cmp-toggle.on { background: hsl(var(--brand)); color: hsl(var(--brand-fg)); border-color: transparent; }
+
+/* ─── Icon "Nghe đọc sách" (header) — bật/tắt thanh phát ──────────────────*/
+#audio-toggle {
+  flex-shrink: 0;
+  width: 32px; height: 32px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid hsl(var(--fg-4) / 0.5);
+  background: hsl(var(--bg-0));
+  color: hsl(var(--fg-2));
+  transition: background 0.13s, color 0.13s, border-color 0.13s;
+}
+#audio-toggle svg { width: 16px; height: 16px; }
+#audio-toggle:hover { color: hsl(var(--fg-0)); border-color: hsl(var(--brand) / 0.5); }
+#audio-toggle.on { background: hsl(var(--brand)); color: hsl(var(--brand-fg)); border-color: transparent; }
+
+/* ─── Split PDF: modal thu hẹp, pane PDF nằm bên phải ────────────────────*/
+#overlay.compare { gap: 0; align-items: stretch; }
+#overlay.compare #modal { width: min(660px, 52%); max-height: none; }
+
+#pdf-pane {
+  display: none;
+  flex-direction: column;
+  flex: 1; min-width: 0;
+  max-height: 92vh;
+  background: hsl(var(--bg-1));
+  border: 1px solid hsl(var(--fg-4) / 0.4);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+#overlay.compare #pdf-pane { display: flex; animation: modalIn 0.22s var(--ease-out-expo, cubic-bezier(0.22,1,0.36,1)); }
+#pdf-frame { flex: 1; width: 100%; border: 0; background: hsl(var(--bg-0)); }
 
 #modal-body { overflow-y: auto; padding: 22px 26px 10px; }
 
@@ -517,6 +579,21 @@ button { font-family: inherit; cursor: pointer; }
 .prose strong { color: hsl(var(--fg-0)); font-weight: 700; }
 .prose em { color: hsl(var(--fg-2)); }
 .prose a { color: hsl(var(--brand)); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Chip "đoạn gốc lỗi OCR" — gọn, dạng inline; bấm để mở PDF đối chiếu */
+.ocr-badge {
+  display: inline-flex; align-items: center; gap: 5px; vertical-align: baseline;
+  font-family: var(--font-sans, inherit);
+  font-size: 12px; font-weight: 600; font-style: normal; line-height: 1;
+  color: hsl(var(--warn));
+  background: hsl(var(--warn) / 0.12);
+  border: 1px solid hsl(var(--warn) / 0.32);
+  border-radius: 999px;
+  padding: 4px 11px; margin: 2px 0;
+}
+.ocr-badge svg { width: 13px; height: 13px; opacity: 0.85; }
+button.ocr-badge { cursor: pointer; transition: background 0.13s, border-color 0.13s, color 0.13s; }
+button.ocr-badge:hover { background: hsl(var(--warn) / 0.22); border-color: hsl(var(--warn) / 0.55); }
 .prose blockquote {
   margin: 18px 0; padding: 12px 20px;
   border-left: 3px solid hsl(var(--brand) / 0.6);
@@ -572,6 +649,67 @@ button { font-family: inherit; cursor: pointer; }
   background: hsl(var(--bg-1));
   flex-shrink: 0;
 }
+
+/* ─── Thanh phát "đọc sách" (Vbee TTS) ─────────────────────────────────────*/
+#audio-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px 4px;
+}
+#audio-bar.hidden { display: none; }
+#audio-el { display: none; }
+
+#audio-play {
+  flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: none; background: hsl(var(--brand)); color: hsl(var(--brand-fg));
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+#audio-play:hover { filter: brightness(1.06); transform: scale(1.05); }
+#audio-play svg { width: 18px; height: 18px; }
+#audio-play .ic-pause { display: none; }
+#audio-bar.playing #audio-play .ic-play { display: none; }
+#audio-bar.playing #audio-play .ic-pause { display: inline; }
+
+.audio-label {
+  flex-shrink: 0; font-size: 12px; font-weight: 700;
+  color: hsl(var(--fg-2)); letter-spacing: 0.02em;
+}
+.audio-time {
+  flex-shrink: 0; font-family: var(--font-mono, monospace);
+  font-size: 11px; color: hsl(var(--fg-2)); font-variant-numeric: tabular-nums;
+  min-width: 30px; text-align: center;
+}
+
+.audio-seek {
+  flex: 1; min-width: 0; height: 5px; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    hsl(var(--brand)) 0%, hsl(var(--brand)) var(--p, 0%),
+    hsl(var(--bg-3)) var(--p, 0%), hsl(var(--bg-3)) 100%
+  );
+}
+.audio-seek::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: hsl(var(--brand)); border: 2px solid hsl(var(--bg-1));
+  box-shadow: 0 1px 3px hsl(var(--bg-0) / 0.4);
+}
+.audio-seek::-moz-range-thumb {
+  width: 13px; height: 13px; border-radius: 50%; border: 2px solid hsl(var(--bg-1));
+  background: hsl(var(--brand));
+}
+
+.audio-speed {
+  flex-shrink: 0; min-width: 38px; height: 28px; padding: 0 8px;
+  border-radius: 8px; border: 1px solid hsl(var(--fg-4) / 0.45);
+  background: hsl(var(--bg-2) / 0.5); color: hsl(var(--fg-2));
+  font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+  transition: border-color 0.13s, color 0.13s, background 0.13s;
+}
+.audio-speed:hover { border-color: hsl(var(--brand) / 0.6); color: hsl(var(--fg-0)); background: hsl(var(--bg-2)); }
 
 /* thanh footer luôn 1 dòng, thấp */
 #foot-bar {

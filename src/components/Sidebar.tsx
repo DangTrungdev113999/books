@@ -17,9 +17,27 @@ export function Sidebar({ registry, entry, book, controller, onChangeBook, onOpe
     <aside id="sidebar">
       <div id="brand">
         <BookSwitcher books={registry.books} currentId={book.meta.id} onChange={onChangeBook} />
-        <h1 id="brand-title">{book.meta.titleVi}</h1>
-        <div className="by" id="brand-by">
-          {book.meta.author} · {book.meta.title}
+        <div className="masthead">
+          <div className="mh-row">
+            <div className="mh-text">
+              <h1 id="brand-title">{book.meta.titleVi}</h1>
+              <div className="by" id="brand-by">
+                {book.meta.author} · {book.meta.title}
+              </div>
+            </div>
+            <svg
+              className="mh-chev"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </div>
         </div>
       </div>
       {controller ? (

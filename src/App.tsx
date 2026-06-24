@@ -4,6 +4,7 @@ import { Topbar } from './components/Topbar';
 import { Mindmap } from './components/Mindmap';
 import { ReaderModal } from './components/ReaderModal';
 import { ResumeCard } from './components/ResumeCard';
+import { Watermark } from './components/Watermark';
 import { HistoryDrawer } from './components/HistoryDrawer';
 import { useRegistry } from './hooks/useRegistry';
 import { useBook } from './hooks/useBook';
@@ -87,6 +88,7 @@ export function App() {
           <Topbar themeCtl={themeCtl} onOpenHistory={() => setHistoryOpen(true)} />
           <ResumeCard book={book} onResume={(id, opts) => open(id, opts)} />
           <Mindmap key={bookId!} outline={book.markmap} onOpenSection={open} onReady={setController} />
+          <Watermark />
         </main>
       </div>
 

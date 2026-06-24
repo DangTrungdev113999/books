@@ -44,7 +44,6 @@ export function Mindmap({ outline, onOpenSection, onReady }: Props) {
   return (
     <>
       <svg id="map" ref={svgRef}></svg>
-      <div id="hint-bar">Click vào một nhánh để đọc · cuộn để zoom · kéo để di chuyển</div>
     </>
   );
 }

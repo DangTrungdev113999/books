@@ -47,44 +47,67 @@ button { font-family: inherit; cursor: pointer; }
   height: 100%;
 }
 
+/* ── Masthead / biển sách (chỗ chọn sách sau này) ─────────────────────────
+ * Giữ NGUYÊN chiều cao hiện tại (99px) qua min-height + box-sizing, mọi màu lấy
+ * từ token nên đổi theme vẫn ăn khớp. Eyebrow + spine + chevron = gợi ý "tủ sách
+ * có thể đổi". */
 #brand {
-  padding: 24px 22px 18px;
+  position: relative;
+  padding: 13px 20px;
   border-bottom: 1px solid hsl(var(--bg-3) / 0.7);
+  background:
+    radial-gradient(125% 145% at 0% 0%, hsl(var(--brand) / 0.07), transparent 58%),
+    linear-gradient(180deg, hsl(var(--bg-1)), hsl(var(--bg-1) / 0));
 }
-#brand .kicker {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: hsl(var(--brand));
+/* gạch chân: hairline terracotta tan dần sang phải — như chỉ gáy sách */
+#brand::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: linear-gradient(90deg, hsl(var(--brand) / 0.55), hsl(var(--brand) / 0) 44%);
 }
+
+.masthead { min-width: 0; }
+
+.mh-row { display: flex; align-items: center; gap: 12px; }
+.mh-text { flex: 1; min-width: 0; }
+
 #brand h1 {
   font-family: var(--font-serif);
-  font-size: 25px;
-  line-height: 1.12;
-  font-weight: 700;
-  margin: 8px 0 5px;
-  color: hsl(var(--fg-0));
-  letter-spacing: -0.01em;
+  font-size: 21px; line-height: 1.08; font-weight: 700;
+  margin: 0; color: hsl(var(--fg-0)); letter-spacing: -0.015em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-#brand .by { font-size: 12.5px; color: hsl(var(--fg-2)); }
+#brand .by {
+  margin: 4px 0 0;
+  font-size: 11.5px; line-height: 1.3; color: hsl(var(--fg-3));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
-/* Book switcher (đa sách) — chỉ hiện khi có ≥2 sách */
-.book-switcher { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.mh-chev {
+  flex-shrink: 0; width: 17px; height: 17px;
+  color: hsl(var(--fg-4));
+  transition: color 0.22s var(--ease-out-quart), transform 0.22s var(--ease-out-quart);
+}
+#brand:hover .mh-chev { color: hsl(var(--brand)); transform: translateY(1.5px); }
+
+/* Book switcher thực (đa sách) — chỉ hiện khi có ≥2 sách, đặt trên masthead */
+.book-switcher { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
 .book-switcher .bs-label {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.18em;
+  font-family: var(--font-mono);
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.26em;
   text-transform: uppercase; color: hsl(var(--brand));
 }
 .book-switcher select {
   appearance: none; -webkit-appearance: none;
-  font: inherit; font-size: 13.5px; font-weight: 600;
-  color: hsl(var(--fg-0)); background: hsl(var(--bg-2));
-  border: 1px solid hsl(var(--bg-3)); border-radius: 9px;
-  padding: 8px 30px 8px 11px; cursor: pointer; width: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
+  font-family: var(--font-serif); font-size: 14px; font-weight: 700;
+  color: hsl(var(--fg-0)); background: hsl(var(--bg-1));
+  border: 1px solid hsl(var(--bg-3)); border-radius: 10px;
+  padding: 9px 32px 9px 12px; cursor: pointer; width: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23c96442' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-.book-switcher select:hover { border-color: hsl(var(--brand) / 0.5); }
+.book-switcher select:hover { border-color: hsl(var(--brand) / 0.55); box-shadow: 0 0 0 3px hsl(var(--brand) / 0.08); }
 
 #toc { overflow-y: auto; flex: 1; padding: 8px 10px 24px; }
 
@@ -160,8 +183,14 @@ button { font-family: inherit; cursor: pointer; }
   flex: 1;
   position: relative;
   min-width: 0;
-  background:
-    radial-gradient(140% 100% at 78% 0%, hsl(var(--bg-2) / 0.55) 0%, hsl(var(--bg-0)) 58%);
+  background-color: hsl(var(--bg-0));
+  /* Lưới kẻ ô mảnh như giấy note + wash ấm — đỡ trống, màu theo token nên
+   * sáng/tối đều dịu. Lưới đứng yên làm phông nền (map vẫn kéo/zoom trên đó). */
+  background-image:
+    linear-gradient(hsl(var(--fg-4) / 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--fg-4) / 0.22) 1px, transparent 1px),
+    radial-gradient(140% 100% at 78% 0%, hsl(var(--bg-2) / 0.6) 0%, transparent 60%);
+  background-size: 30px 30px, 30px 30px, auto;
 }
 
 #topbar {
@@ -902,4 +931,33 @@ mark.hl.note-end::after {
 
 @media (max-width: 760px) {
   #sidebar { display: none; }
+}
+
+/* ── Watermark / chữ ký tác giả (góc dưới-trái canvas) ────────────────────── */
+.watermark {
+  position: absolute;
+  left: 30px;
+  bottom: 20px;
+  z-index: 3;
+  pointer-events: none; /* không chắn thao tác kéo/zoom map */
+  user-select: none;
+  /* Cormorant Garamond italic — thanh, high-contrast, sang. Chữ đổ gradient
+   * terracotta → mực, mờ nhẹ như chữ ký dập foil. Đổi theme tự ăn màu. */
+  font-family: 'Cormorant Garamond', var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 1;
+  letter-spacing: 0.045em;
+  background: linear-gradient(102deg, hsl(var(--brand) / 0.95) 0%, hsl(var(--fg-2)) 62%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  opacity: 0.62;
+}
+/* nét nhấn đầu tên: chữ Đ to hơn chút như chữ cái mở đầu thư pháp */
+.watermark::first-letter {
+  font-size: 1.28em;
+  letter-spacing: 0.02em;
 }

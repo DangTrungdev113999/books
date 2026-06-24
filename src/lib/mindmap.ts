@@ -10,6 +10,7 @@ import { Markmap } from 'markmap-view';
 import { getLast, isRead } from './reading-state';
 
 const INITIAL_EXPAND = 3; // root + nhóm + chương hiện sẵn; lá gập, click để xem
+const FOCUS_ZOOM = 1.7; // mức phóng to khi bấm vào một chương (so với fit cả cây)
 
 /** Node markmap (chỉ những field ta dùng). */
 export interface MMNode {
@@ -74,7 +75,9 @@ export function createMindmap(
     });
   }
 
-  // Mở rộng riêng một chương: mở nhóm chứa nó, gập nhóm/chương khác, fit lại.
+  // Mở rộng riêng một chương: mở nhóm chứa nó, gập nhóm/chương khác, rồi ZOOM SÁT
+  // vào chương đó (không fit cả cây). fit() trước để có scale chuẩn (khử tích luỹ),
+  // rescale() phóng to, centerNode() đưa chương vào giữa.
   function focusChapter(target: MMNode, groupNode: MMNode) {
     for (const group of mmRoot.children || []) {
       setFold(group, group !== groupNode);
@@ -85,9 +88,13 @@ export function createMindmap(
     void mm.renderData();
     forceVisible();
     setTimeout(() => {
-      void mm.renderData();
-      void mm.fit();
-      forceVisible();
+      void (async () => {
+        await mm.renderData();
+        await mm.fit(); // scale baseline xác định (không phụ thuộc lần zoom trước)
+        await mm.rescale(FOCUS_ZOOM); // phóng to quanh tâm
+        mm.centerNode(target as never); // đưa chương đang mở vào giữa khung
+        forceVisible();
+      })();
     }, 70);
   }
 

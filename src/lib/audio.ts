@@ -5,6 +5,8 @@
  *   khớp phong cách lib/popup.ts. Section không có audio → ẩn thanh phát.
  * ════════════════════════════════════════════════════════════════════════════ */
 
+import { loadTiming, setReading } from './karaoke';
+
 const BASE = import.meta.env.BASE_URL; // vd. "/books/" trên GitHub Pages
 
 interface AudioManifest {
@@ -33,6 +35,7 @@ function el() {
     cur: $('#audio-cur'),
     dur: $('#audio-dur'),
     speed: $<HTMLButtonElement>('#audio-speed'),
+    mute: $<HTMLButtonElement>('#audio-mute'),
   };
 }
 
@@ -74,6 +77,7 @@ export async function loadAudioFor(sectionId: string) {
 
   hasAudio = Boolean(bookId && manifest && manifest.sections[sectionId]);
   if (hasAudio) {
+    loadTiming(bookId!, sectionId); // nạp timing karaoke (best-effort, async)
     audio.src = `${BASE}audio/${bookId}/${sectionId}.mp3`;
     audio.playbackRate = SPEEDS[speedIdx];
     audio.load();
@@ -116,6 +120,12 @@ function applyVisibility() {
   const open = hasAudio && barOpen;
   bar?.classList.toggle('hidden', !open);
   toggle?.classList.toggle('on', open);
+  setReading(open); // bật/tắt chế độ đọc-theo (karaoke) theo thanh phát
+}
+
+/* Section hiện tại có audio (manifest đã nạp)? — popup dùng để quyết wrap từ */
+export function audioAvailable(sectionId: string): boolean {
+  return Boolean(bookId && manifest && manifest.sections[sectionId]);
 }
 
 export function stopAudio() {
@@ -177,5 +187,11 @@ export function setupAudio() {
     speedIdx = (speedIdx + 1) % SPEEDS.length;
     audio.playbackRate = SPEEDS[speedIdx];
     speed.textContent = `${SPEEDS[speedIdx]}×`;
+  });
+
+  const { mute } = el();
+  mute?.addEventListener('click', () => {
+    audio.muted = !audio.muted;
+    mute.classList.toggle('on', audio.muted); // "on" = đang tắt tiếng (đọc thầm)
   });
 }

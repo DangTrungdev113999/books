@@ -7,11 +7,10 @@ compatibility_date = "2025-01-01"
 [vars]
 SITE_URL = "https://dangtrungdev113999.github.io/books"
 
-# KV để rate-limit. Đang TÁI DÙNG namespace của worker finpath (đã có sẵn).
-# Muốn tách riêng: chạy `wrangler kv namespace create FEEDBACK_RL` rồi thay id dưới đây.
+# KV để rate-limit. Namespace riêng cho worker này (tạo 2026-06-24).
 [[kv_namespaces]]
 binding = "FEEDBACK_RL"
-id = "8381e280be0742bc89f91de4ee4ea650"
+id = "5601c0ecdb79457f8555d12d87984163"
 
 # Secrets (KHÔNG để trong file này) — set bằng:
 #   wrangler secret put TELEGRAM_BOT_TOKEN

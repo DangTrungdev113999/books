@@ -91,6 +91,16 @@ export function ReaderModal() {
               <span id="audio-cur" className="audio-time">0:00</span>
               <input id="audio-seek" className="audio-seek" type="range" min={0} max={0} defaultValue={0} aria-label="Tua" />
               <span id="audio-dur" className="audio-time">0:00</span>
+              <button id="audio-mute" className="audio-mini" aria-label="Tắt tiếng (đọc thầm)" data-htip="Tắt tiếng, vẫn đọc theo">
+                <svg className="ic-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z" />
+                  <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14" />
+                </svg>
+                <svg className="ic-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z" />
+                  <path d="m23 9-6 6M17 9l6 6" />
+                </svg>
+              </button>
               <button id="audio-speed" className="audio-speed" aria-label="Tốc độ đọc">1×</button>
             </div>
 

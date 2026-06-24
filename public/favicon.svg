@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- The Pyramid Principle — salon mark. Parchment tile + terracotta pyramid. -->
+  <rect width="64" height="64" rx="14" fill="#f5f4ed"/>
+  <g fill="none" stroke="#c96442" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">
+    <!-- outer pyramid -->
+    <path d="M32 11 L53 50 H11 Z"/>
+    <!-- two internal tiers (Minto stacking) -->
+    <path d="M24.8 24.4 H39.2"/>
+    <path d="M18.6 37.4 H45.4"/>
+  </g>
+  <!-- apex node, the single governing thought -->
+  <circle cx="32" cy="16.5" r="3.1" fill="#c96442"/>
+</svg>

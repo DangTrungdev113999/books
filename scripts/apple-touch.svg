@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Full-bleed parchment square (iOS rounds corners itself; no transparency). -->
+  <rect width="180" height="180" fill="#f5f4ed"/>
+  <g fill="none" stroke="#c96442" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M90 38 L143 138 H37 Z"/>
+    <path d="M72 72 H108"/>
+    <path d="M56.5 105 H123.5"/>
+  </g>
+  <circle cx="90" cy="52" r="8" fill="#c96442"/>
+</svg>

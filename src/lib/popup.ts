@@ -9,7 +9,8 @@ import { marked } from 'marked';
 import { submitFeedback, isFeedbackEnabled } from './feedback';
 import { markRead, setLast } from './reading-state';
 import { renderHighlights, setupHighlighter, resetHighlightUI } from './highlight';
-import { setupAudio, setAudioBook, loadAudioFor, stopAudio, hideAudio } from './audio';
+import { setupAudio, setAudioBook, loadAudioFor, stopAudio, hideAudio, audioAvailable } from './audio';
+import { setupKaraoke, wrapWords, resetKaraoke } from './karaoke';
 import type { BookData, Lang, Section } from './types';
 
 void isFeedbackEnabled; // form luôn hiển thị; helper giữ để dùng nếu cần
@@ -123,6 +124,7 @@ export function closeModal() {
   resetHighlightUI();
   closePdfPane();
   stopAudio();
+  resetKaraoke();
   $('#overlay')?.classList.remove('open');
   document.body.style.overflow = '';
   hideTooltip();
@@ -153,12 +155,15 @@ function renderBody() {
     body.appendChild(badge);
   }
 
+  resetKaraoke();
   const art = document.createElement('article');
   art.className = 'prose';
   art.innerHTML = marked.parse(md || '') as string;
   // Chip OCR phải chạy TRƯỚC tooltip/highlight: chỉ thay node <em>, giữ nguyên
   // số <p> để attachParagraphTooltips/renderHighlights không lệch chỉ số.
   decorateOcrBadges(art);
+  // Bọc <span> từng từ TRƯỚC tooltip/highlight (giữ khoảng trắng → offset không lệch).
+  if (lang === 'vi' && audioAvailable(current.id)) wrapWords(art);
   body.appendChild(art);
 
   // Nút "So sánh PDF" ở header: chỉ hiện khi sách có PDF gốc.
@@ -424,6 +429,7 @@ export function initReader() {
 
   setupHighlighter(() => ({ id: current && current.id, lang }));
   setupAudio();
+  setupKaraoke();
 
   const cmt = $<HTMLTextAreaElement>('#fb-comment')!;
   cmt.addEventListener('input', () => {

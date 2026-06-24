@@ -6,6 +6,7 @@
   "scripts": {
     "build:books": "node scripts/build.mjs",
     "build:audio": "node scripts/tts.mjs",
+    "build:align": "node scripts/align.mjs",
     "predev": "npm run build:books",
     "dev": "vite",
     "prebuild": "npm run build:books",

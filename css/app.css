@@ -725,6 +725,32 @@ button.ocr-badge:hover { background: hsl(var(--warn) / 0.22); border-color: hsl(
 }
 .audio-speed:hover { border-color: hsl(var(--brand) / 0.6); color: hsl(var(--fg-0)); background: hsl(var(--bg-2)); }
 
+/* nút nhỏ trong thanh phát (mute) */
+.audio-mini {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 7px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid hsl(var(--fg-4) / 0.45);
+  background: hsl(var(--bg-2) / 0.5); color: hsl(var(--fg-2));
+  transition: border-color 0.13s, color 0.13s, background 0.13s;
+}
+.audio-mini svg { width: 15px; height: 15px; }
+.audio-mini:hover { border-color: hsl(var(--brand) / 0.6); color: hsl(var(--fg-0)); background: hsl(var(--bg-2)); }
+.audio-mini .ic-mute { display: none; }
+#audio-mute.on { color: hsl(var(--brand)); border-color: hsl(var(--brand) / 0.5); background: hsl(var(--brand) / 0.12); }
+#audio-mute.on .ic-vol { display: none; }
+#audio-mute.on .ic-mute { display: inline; }
+
+/* ─── Karaoke read-along: từ active dần theo voice ────────────────────────*/
+.prose .kw { transition: color 0.16s ease, background 0.16s ease; }
+.prose.reading .kw { color: hsl(var(--fg-2) / 0.5); cursor: pointer; } /* chưa tới = mờ */
+.prose.reading .kw.read { color: hsl(var(--fg-1)); }                   /* đã đọc qua = thường */
+.prose.reading .kw.now {                                              /* từ đang đọc = nổi */
+  color: hsl(var(--brand));
+  background: hsl(var(--brand) / 0.14);
+  border-radius: 3px;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+
 /* thanh footer luôn 1 dòng, thấp */
 #foot-bar {
   display: flex; align-items: center; gap: 8px;

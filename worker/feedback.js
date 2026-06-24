@@ -4,10 +4,12 @@
  *
  * Endpoint: POST /api/feedback
  * Secrets (wrangler secret put):
- *   TELEGRAM_BOT_TOKEN              — bot CŨ (lấy lại từ worker Stream Intelligent)
- *   TELEGRAM_FEEDBACK_GROUP_ID     — group MỚI
+ *   TELEGRAM_BOT_TOKEN              — token bot Telegram (lấy ở @BotFather → /mybots → API Token)
+ *   TELEGRAM_FEEDBACK_GROUP_ID     — id supergroup forum, dạng -100<id>
+ *                                    (vd. group t.me/c/4387663977/... → -1004387663977)
  * Vars (wrangler.toml [vars], tuỳ chọn):
  *   SITE_URL                       — URL gốc trang đọc, để gắn link (vd. https://<user>.github.io/<repo>)
+ * Topic mỗi sách: xem hằng BOOK_TOPICS bên dưới (message_thread_id).
  * KV binding: FEEDBACK_RL (rate-limit)
  */
 
@@ -20,6 +22,20 @@ const ALLOWED_ORIGINS = [
 
 const MAX_REQS_PER_HOUR = 12;
 const SECONDS_PER_HOUR = 3600;
+
+/**
+ * Map mỗi sách → topic (message_thread_id) trong group forum Telegram.
+ * Group là 1 (đặt ở secret TELEGRAM_FEEDBACK_GROUP_ID), mỗi sách bắn vào 1 topic riêng.
+ *
+ * Cách lấy topic id: mở topic trong group → URL dạng https://t.me/c/<group>/<TOPIC_ID>
+ *   vd. https://t.me/c/4387663977/2  →  topic id = 2
+ *
+ * Thêm sách mới: tạo topic trong group rồi thêm 1 dòng "book_id: topic_id" vào đây.
+ * Sách không có trong map → bắn vào General của group (vẫn nhận được, chỉ không vào topic).
+ */
+const BOOK_TOPICS = {
+  'the-pyramid-principle': 2,
+};
 
 const SLUG_RE = /^[A-Za-z0-9_-]+$/;
 const SEC_RE = /^sec-[0-9]{2}-[0-9]{2}$/;
@@ -112,17 +128,20 @@ function buildTelegramMessage(p, siteUrl) {
   return lines.join('\n');
 }
 
-async function postTelegram(env, text) {
+async function postTelegram(env, text, threadId) {
   const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+  const body = {
+    chat_id: env.TELEGRAM_FEEDBACK_GROUP_ID,
+    text,
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+  };
+  // Bắn vào đúng topic của group forum (nếu sách có map topic).
+  if (threadId != null) body.message_thread_id = threadId;
   const resp = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: env.TELEGRAM_FEEDBACK_GROUP_ID,
-      text,
-      parse_mode: 'HTML',
-      disable_web_page_preview: true,
-    }),
+    body: JSON.stringify(body),
   });
   const data = await resp.json();
   if (data.ok && data.result) return { ok: true, message_id: data.result.message_id };
@@ -162,7 +181,7 @@ export default {
     }
 
     const text = buildTelegramMessage(v.v, env.SITE_URL || origin);
-    const tg = await postTelegram(env, text);
+    const tg = await postTelegram(env, text, BOOK_TOPICS[v.v.book_id]);
     if (!tg.ok) {
       return jsonResponse({ ok: false, error: 'telegram_fail', message: tg.message }, 502, origin);
     }

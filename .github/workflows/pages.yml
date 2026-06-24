@@ -29,7 +29,11 @@ jobs:
           cache: npm
       - run: npm ci
       # build:books (sinh public/data/*.json) chạy tự động qua prebuild, rồi vite build → dist/
+      # VITE_WORKER_URL nạp từ repo secret (Settings → Secrets and variables → Actions),
+      # tiêm vào lúc build để form "Ghi điều học được" biết worker gửi Telegram.
       - run: npm run build
+        env:
+          VITE_WORKER_URL: ${{ secrets.VITE_WORKER_URL }}
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

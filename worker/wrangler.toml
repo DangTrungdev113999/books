@@ -2,16 +2,16 @@ name = "feedback-pyramid"
 main = "feedback.js"
 compatibility_date = "2025-01-01"
 
-# Link gắn trong tin nhắn Telegram (điền sau khi biết URL GitHub Pages).
-# Ví dụ: "https://dangtrungdev113999.github.io/barbara-minto"
+# Link gắn trong tin nhắn Telegram. Repo tên "books" → project page mặc định ở /books/.
+# ⚠️ XÁC NHẬN lại URL Pages thực tế của bạn rồi sửa nếu khác (vd. có custom domain).
 [vars]
-SITE_URL = ""
+SITE_URL = "https://dangtrungdev113999.github.io/books"
 
-# KV để rate-limit. Tạo bằng:  wrangler kv namespace create FEEDBACK_RL
-# rồi dán id trả về vào dưới đây.
+# KV để rate-limit. Đang TÁI DÙNG namespace của worker finpath (đã có sẵn).
+# Muốn tách riêng: chạy `wrangler kv namespace create FEEDBACK_RL` rồi thay id dưới đây.
 [[kv_namespaces]]
 binding = "FEEDBACK_RL"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "8381e280be0742bc89f91de4ee4ea650"
 
 # Secrets (KHÔNG để trong file này) — set bằng:
 #   wrangler secret put TELEGRAM_BOT_TOKEN

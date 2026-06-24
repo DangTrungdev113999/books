@@ -46,6 +46,8 @@ export interface RegistryBook {
   titleVi: string;
   author: string;
   source: string;
+  /** Tên file PDF bản gốc trong public/ (vd. "the-pyramid-principle.pdf"). Tùy chọn. */
+  pdf?: string;
   data: string;
   groups: RegistryGroup[];
 }

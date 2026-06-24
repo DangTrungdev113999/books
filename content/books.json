@@ -6,6 +6,7 @@
       "titleVi": "Nguyên lý Kim tự tháp",
       "author": "Barbara Minto",
       "source": "the-pyramid-principle",
+      "pdf": "the-pyramid-principle.pdf",
       "data": "the-pyramid-principle.json",
       "groups": [
         { "title": "Mở đầu", "files": ["01", "02"] },

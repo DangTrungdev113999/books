@@ -111,6 +111,53 @@ button { font-family: inherit; cursor: pointer; }
 
 #toc { overflow-y: auto; flex: 1; padding: 8px 10px 24px; }
 
+/* ── Bản gốc PDF — link gọn ghim đáy sidebar (không chiếm chỗ đọc) ──────────
+ * Hairline terracotta phía trên như chỉ gáy sách (đối xứng với #brand::after).
+ * Một hàng, ~50px, mở PDF ở tab mới. Mọi màu lấy từ token → đổi theme vẫn khớp. */
+.source-doc {
+  position: relative; flex-shrink: 0;
+  display: flex; align-items: center; gap: 11px;
+  padding: 11px 18px 13px;
+  text-decoration: none; color: hsl(var(--fg-2));
+  border-top: 1px solid hsl(var(--bg-3) / 0.7);
+  transition: background 0.16s var(--ease-out-quart), color 0.16s var(--ease-out-quart);
+}
+.source-doc::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px;
+  background: linear-gradient(90deg, hsl(var(--brand) / 0.55), hsl(var(--brand) / 0) 44%);
+}
+.source-doc:hover { background: hsl(var(--brand) / 0.06); color: hsl(var(--fg-0)); }
+
+.source-doc .sd-icon {
+  flex-shrink: 0; display: inline-flex;
+  width: 30px; height: 30px; border-radius: 8px;
+  align-items: center; justify-content: center;
+  color: hsl(var(--brand));
+  background: hsl(var(--brand) / 0.10);
+  border: 1px solid hsl(var(--brand) / 0.22);
+  transition: background 0.16s, transform 0.16s var(--ease-out-quart);
+}
+.source-doc .sd-icon svg { width: 16px; height: 16px; }
+.source-doc:hover .sd-icon { background: hsl(var(--brand) / 0.16); transform: translateY(-1px); }
+
+.source-doc .sd-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.source-doc .sd-label {
+  font-family: var(--font-serif); font-size: 13.5px; font-weight: 700;
+  line-height: 1.05; color: hsl(var(--fg-0));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.source-doc .sd-sub {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase; color: hsl(var(--brand) / 0.85);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.source-doc .sd-arrow {
+  flex-shrink: 0; width: 15px; height: 15px; margin-left: auto;
+  color: hsl(var(--fg-4));
+  transition: color 0.16s, transform 0.16s var(--ease-out-quart);
+}
+.source-doc:hover .sd-arrow { color: hsl(var(--brand)); transform: translate(1.5px, -1.5px); }
+
 /* mỗi Phần là 1 section rõ ràng: đường kẻ phân cách + khoảng cách rộng */
 .toc-group { margin-top: 18px; padding-top: 16px; border-top: 1px solid hsl(var(--bg-3)); }
 .toc-group:first-child { margin-top: 2px; padding-top: 2px; border-top: none; }
@@ -931,6 +978,26 @@ mark.hl.note-end::after {
 
 @media (max-width: 760px) {
   #sidebar { display: none; }
+
+  /* Header popup đọc trên mobile: tách điều khiển (đổi ngôn ngữ + đóng) lên một
+   * hàng riêng, để tiêu đề + breadcrumb chiếm trọn bề ngang bên dưới — hết cảnh
+   * breadcrumb dài chen ép nút bấm. */
+  #modal-head {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 8px;
+    padding: 13px 15px 12px;
+  }
+  #modal-head .lang-toggle { order: 1; }
+  #modal-head #modal-close { order: 2; margin-left: auto; }
+  #modal-head .htext { order: 3; flex-basis: 100%; }
+  #modal-head .crumb {
+    font-size: 10px; margin-bottom: 4px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #modal-head h2 { font-size: 19px; }
+  #modal-head .lang-toggle button { padding: 5px 13px; }
 }
 
 /* ── Watermark / chữ ký tác giả (góc dưới-trái canvas) ────────────────────── */

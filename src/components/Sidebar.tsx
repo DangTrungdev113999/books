@@ -45,6 +45,31 @@ export function Sidebar({ registry, entry, book, controller, onChangeBook, onOpe
       ) : (
         <nav id="toc"></nav>
       )}
+      {entry.pdf && (
+        <a
+          className="source-doc"
+          href={`${import.meta.env.BASE_URL}${entry.pdf}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Mở bản gốc PDF trong tab mới"
+        >
+          <span className="sd-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M8 13h4M8 17h6" />
+            </svg>
+          </span>
+          <span className="sd-text">
+            <span className="sd-label">Bản gốc</span>
+            <span className="sd-sub">PDF · {entry.author}</span>
+          </span>
+          <svg className="sd-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M7 17 17 7" />
+            <path d="M9 7h8v8" />
+          </svg>
+        </a>
+      )}
     </aside>
   );
 }

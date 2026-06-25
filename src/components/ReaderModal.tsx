@@ -135,6 +135,10 @@ export function ReaderModal() {
         {/* Bản PDF gốc — split bên phải khi bật "So sánh". User tự cuộn tới đoạn cần. */}
         <aside id="pdf-pane" aria-label="Bản PDF gốc">
           <iframe id="pdf-frame" title="Bản PDF gốc"></iframe>
+          <div id="pdf-loading" className="hidden" aria-hidden="true">
+            <span className="pdf-spinner"></span>
+            <span>Đang tải trang…</span>
+          </div>
         </aside>
       </div>
 

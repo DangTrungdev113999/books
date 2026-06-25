@@ -25,8 +25,10 @@ let current: Section | null = null;
 let lang: Lang = 'vi';
 
 /* ── So sánh PDF gốc ──────────────────────────────────────────────────────*/
+const BASE = import.meta.env.BASE_URL;
 let pdfUrl: string | null = null;
-let pdfLoaded = false; // iframe đã nạp src lần đầu chưa (giữ vị trí cuộn của user)
+let pdfPages: Record<string, number> | null = null; // section id → số trang PDF
+let pdfShownPage = 0; // trang iframe đang hiển thị (tránh reload thừa)
 
 /* ── Theo dõi tiến độ đọc ──────────────────────────────────────────────────*/
 let suppressTrack = false;
@@ -68,9 +70,17 @@ export function setBook(b: BookData, pdf: string | null = null) {
   setAudioBook(b.meta.id);
   if (pdf !== pdfUrl) {
     pdfUrl = pdf;
-    pdfLoaded = false; // sách mới → iframe sẽ nạp lại PDF đúng khi mở lần đầu
+    pdfShownPage = 0; // sách mới → iframe nạp lại đúng trang khi mở
     const frame = $<HTMLIFrameElement>('#pdf-frame');
     if (frame) frame.removeAttribute('src');
+    // map section → trang PDF (best-effort, để mở PDF nhảy đúng trang)
+    pdfPages = null;
+    if (pdf) {
+      fetch(`${BASE}${b.meta.id}.pages.json`, { cache: 'no-cache' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((m) => { pdfPages = m; })
+        .catch(() => { pdfPages = null; });
+    }
   }
   closePdfPane();
 }
@@ -98,6 +108,7 @@ export function openSection(id: string, opts: { lang?: Lang; scrollTop?: number 
   renderBody();
   renderNav();
   setupFeedback();
+  syncPdfPage(); // pane đang mở → nhảy PDF tới trang của mục mới
   $('#modal-foot')!.classList.remove('fb-open');
 
   $('#overlay')!.classList.add('open');
@@ -204,18 +215,61 @@ function decorateOcrBadges(art: HTMLElement) {
 
 /* ── PDF pane (split bên phải) ────────────────────────────────────────────*/
 
+function pdfPageFor(): number {
+  return (current && pdfPages && pdfPages[current.id]) || 1;
+}
+
+/* Nạp iframe ở đúng trang của section hiện tại. Đổi chỉ-hash (#page=) KHÔNG làm
+ * native PDF viewer nhảy trang → ép nạp lại (PDF đã cache nên không tải lại 22MB). */
+function showPdfPage(force = false) {
+  if (!pdfUrl) return;
+  const page = pdfPageFor();
+  if (!force && page === pdfShownPage) return;
+  const frame = $<HTMLIFrameElement>('#pdf-frame')!;
+  const target = `${pdfUrl}#page=${page}`;
+  if (pdfShownPage > 0) {
+    // Native PDF viewer bỏ qua đổi chỉ-hash sau khi load → THAY MỚI iframe để
+    // initial-load tôn trọng #page. URL không đổi path → PDF dùng cache, không tải lại 22MB.
+    const fresh = frame.cloneNode(false) as HTMLIFrameElement;
+    armPdfLoading(fresh);
+    fresh.src = target;
+    frame.replaceWith(fresh);
+  } else {
+    armPdfLoading(frame);
+    frame.src = target;
+  }
+  pdfShownPage = page;
+}
+
+/* Hiện spinner "đang tải" trên pane PDF tới khi iframe load xong (có fallback). */
+function armPdfLoading(frame: HTMLIFrameElement) {
+  const ld = $('#pdf-loading');
+  ld?.classList.remove('hidden');
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    ld?.classList.add('hidden');
+    frame.removeEventListener('load', finish);
+    clearTimeout(timer);
+  };
+  const timer = setTimeout(finish, 10000); // fallback nếu 'load' không fire
+  frame.addEventListener('load', finish);
+}
+
+/* Đổi mục khi pane đang mở → nhảy PDF tới trang tương ứng. */
+export function syncPdfPage() {
+  if ($('#overlay')?.classList.contains('compare')) showPdfPage();
+}
+
 function openPdfPane() {
   if (!pdfUrl) return;
-  // Viewport hẹp: split không đủ chỗ → mở PDF ở tab mới.
+  // Viewport hẹp: split không đủ chỗ → mở PDF ở tab mới (vẫn đúng trang).
   if (window.innerWidth < 900) {
-    window.open(pdfUrl, '_blank', 'noopener');
+    window.open(`${pdfUrl}#page=${pdfPageFor()}`, '_blank', 'noopener');
     return;
   }
-  const frame = $<HTMLIFrameElement>('#pdf-frame')!;
-  if (!pdfLoaded) {
-    frame.src = pdfUrl;
-    pdfLoaded = true;
-  }
+  showPdfPage();
   $('#overlay')!.classList.add('compare');
   $('#cmp-toggle')!.classList.add('on');
 }
